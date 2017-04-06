@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0AED9EAE1E8C12AD00953240 /* RNTwitterKitView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AED9EAB1E8C12AD00953240 /* RNTwitterKitView.m */; };
+		0AED9EAF1E8C12AD00953240 /* RNTwitterKitViewManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AED9EAD1E8C12AD00953240 /* RNTwitterKitViewManager.m */; };
 		B3E7B58A1CC2AC0600A0062D /* RNTwitterkit.m in Sources */ = {isa = PBXBuildFile; fileRef = B3E7B5891CC2AC0600A0062D /* RNTwitterkit.m */; };
 /* End PBXBuildFile section */
 
@@ -23,7 +25,13 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		0AED9EAA1E8C12AD00953240 /* RNTwitterKitView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RNTwitterKitView.h; sourceTree = "<group>"; };
+		0AED9EAB1E8C12AD00953240 /* RNTwitterKitView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RNTwitterKitView.m; sourceTree = "<group>"; };
+		0AED9EAC1E8C12AD00953240 /* RNTwitterKitViewManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RNTwitterKitViewManager.h; sourceTree = "<group>"; };
+		0AED9EAD1E8C12AD00953240 /* RNTwitterKitViewManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RNTwitterKitViewManager.m; sourceTree = "<group>"; };
 		134814201AA4EA6300B7C361 /* libRNTwitterkit.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libRNTwitterkit.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		62952E8749F67EB562A0DEAE /* Pods-RNTwitterkit.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RNTwitterkit.debug.xcconfig"; path = "Pods/Target Support Files/Pods-RNTwitterkit/Pods-RNTwitterkit.debug.xcconfig"; sourceTree = "<group>"; };
+		8305FC764F388BD0A0884123 /* Pods-RNTwitterkit.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RNTwitterkit.release.xcconfig"; path = "Pods/Target Support Files/Pods-RNTwitterkit/Pods-RNTwitterkit.release.xcconfig"; sourceTree = "<group>"; };
 		B3E7B5881CC2AC0600A0062D /* RNTwitterkit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RNTwitterkit.h; sourceTree = "<group>"; };
 		B3E7B5891CC2AC0600A0062D /* RNTwitterkit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RNTwitterkit.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -47,13 +55,35 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		45D4EDCA04A9297A45F3A19B /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				62952E8749F67EB562A0DEAE /* Pods-RNTwitterkit.debug.xcconfig */,
+				8305FC764F388BD0A0884123 /* Pods-RNTwitterkit.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 		58B511D21A9E6C8500147676 = {
 			isa = PBXGroup;
 			children = (
+				0AED9EAA1E8C12AD00953240 /* RNTwitterKitView.h */,
+				0AED9EAB1E8C12AD00953240 /* RNTwitterKitView.m */,
+				0AED9EAC1E8C12AD00953240 /* RNTwitterKitViewManager.h */,
+				0AED9EAD1E8C12AD00953240 /* RNTwitterKitViewManager.m */,
 				B3E7B5881CC2AC0600A0062D /* RNTwitterkit.h */,
 				B3E7B5891CC2AC0600A0062D /* RNTwitterkit.m */,
 				134814211AA4EA7D00B7C361 /* Products */,
+				45D4EDCA04A9297A45F3A19B /* Pods */,
+				8411E5D5938BA55C1CDB9429 /* Frameworks */,
 			);
+			sourceTree = "<group>";
+		};
+		8411E5D5938BA55C1CDB9429 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -63,9 +93,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 58B511EF1A9E6C8500147676 /* Build configuration list for PBXNativeTarget "RNTwitterkit" */;
 			buildPhases = (
+				13B7198DEA4BE675EC255573 /* [CP] Check Pods Manifest.lock */,
 				58B511D71A9E6C8500147676 /* Sources */,
 				58B511D81A9E6C8500147676 /* Frameworks */,
 				58B511D91A9E6C8500147676 /* CopyFiles */,
+				6D3C600BD5BD48A752A569B7 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -107,12 +139,47 @@
 		};
 /* End PBXProject section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		13B7198DEA4BE675EC255573 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		6D3C600BD5BD48A752A569B7 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-RNTwitterkit/Pods-RNTwitterkit-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		58B511D71A9E6C8500147676 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0AED9EAF1E8C12AD00953240 /* RNTwitterKitViewManager.m in Sources */,
 				B3E7B58A1CC2AC0600A0062D /* RNTwitterkit.m in Sources */,
+				0AED9EAE1E8C12AD00953240 /* RNTwitterKitView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -195,9 +262,10 @@
 		};
 		58B511F01A9E6C8500147676 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 62952E8749F67EB562A0DEAE /* Pods-RNTwitterkit.debug.xcconfig */;
 			buildSettings = {
 				HEADER_SEARCH_PATHS = (
-				"$(inherited)",
+					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					"$(SRCROOT)/../../../React/**",
 					"$(SRCROOT)/../../react-native/React/**",
@@ -211,6 +279,7 @@
 		};
 		58B511F11A9E6C8500147676 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 8305FC764F388BD0A0884123 /* Pods-RNTwitterkit.release.xcconfig */;
 			buildSettings = {
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",

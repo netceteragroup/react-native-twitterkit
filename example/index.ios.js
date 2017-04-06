@@ -12,19 +12,39 @@ import {
   View
 } from 'react-native';
 
+//import { NativeModules } from 'react-native';
+//import { requireNativeComponent } from 'react-native';
+import RNTwitterKitView from './RNTwitterKitView';
+
+//var myVar = NativeModules.RNTwitterKitViewManager;
+
 export default class example extends Component {
+  
   render() {
+  
+  //myVar.setTweetID('846231685750439936');
+  
     return (
       <View style={styles.container}>
-        <Text style={styles.welcome}>
-          Welcome to React Native!
+      <Text style={styles.welcome}>
+          Welcome to React Native TwitterKit example!
         </Text>
-        <Text style={styles.instructions}>
-          To get started, edit index.ios.js
+      <Text style={styles.instructions}>
+          This is a tweet without picture
         </Text>
+      	<RNTwitterKitView 
+      		style={styles.twitter1} 
+      		tweetid={'20'}
+      		/>
+      <Text style={styles.instructions}>
+          And this one is a tweet with a picture
+        </Text>
+      	<RNTwitterKitView 
+      		style={styles.twitter2} 
+      		tweetid={'846231685750439936'}
+      		/>
         <Text style={styles.instructions}>
-          Press Cmd+R to reload,{'\n'}
-          Cmd+D or shake for dev menu
+          You can tap on the tweet views in order to interract with them.
         </Text>
       </View>
     );
@@ -39,15 +59,26 @@ const styles = StyleSheet.create({
     backgroundColor: '#F5FCFF',
   },
   welcome: {
-    fontSize: 20,
+    fontSize: 15,
     textAlign: 'center',
     margin: 10,
   },
   instructions: {
+  	fontSize: 10,
     textAlign: 'center',
     color: '#333333',
     marginBottom: 5,
   },
+  twitter1: {
+    flex: 0,
+    width: 300,
+    height: 100,
+  },
+  twitter2: {
+    flex: 0,
+    width: 300,
+    height: 300,
+  }
 });
 
 AppRegistry.registerComponent('example', () => example);
