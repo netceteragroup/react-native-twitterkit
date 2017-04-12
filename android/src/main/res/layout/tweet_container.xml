@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<!-- Important notes
+ 1. Must have a long tweet as initializer, 846231685750439936 is good enough. -->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:twittersdk="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@android:color/darker_gray"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:twittersdk="http://schemas.android.com/apk/res-auto">
+    android:layout_height="match_parent">
 
-    <com.twitter.sdk.android.tweetui.CompactTweetView
-        android:visibility="invisible"
+    <com.twitter.sdk.android.tweetui.CustomTweetView
         android:layout_centerInParent="true"
+        android:visibility="invisible"
         android:id="@+id/tweet_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -16,55 +16,56 @@
         twittersdk:tw__tweet_id="846231685750439936"/>
 
     <RelativeLayout
-        android:visibility="visible"
-        android:layout_centerInParent="true"
         android:id="@+id/loading_container"
+        android:layout_centerInParent="true"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:visibility="visible">
 
         <ImageView
-            android:layout_centerInParent="true"
             android:id="@+id/loading_image"
-            android:src="@drawable/load_image"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:src="@drawable/load_image" />
+
         <TextView
+            android:id="@+id/loading_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:textSize="16sp"
-            android:id="@+id/loading_text"
-            android:text="loading"
             android:gravity="center"
+            android:text="loading"
             android:textColor="@android:color/black"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:textSize="16sp" />
 
     </RelativeLayout>
 
     <RelativeLayout
-        android:visibility="invisible"
-        android:layout_centerInParent="true"
         android:id="@+id/error_container"
+        android:layout_centerInParent="true"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:visibility="invisible">
 
         <ImageView
-            android:layout_centerInParent="true"
-            android:src="@drawable/error_image"
             android:id="@+id/error_image"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:src="@drawable/error_image" />
+
         <TextView
+            android:id="@+id/error_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:textSize="16sp"
-            android:id="@+id/error_text"
+            android:gravity="center"
             android:text="error"
             android:textColor="@android:color/black"
-            android:gravity="center"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
+            android:textSize="16sp" />
 
     </RelativeLayout>
 </RelativeLayout>
