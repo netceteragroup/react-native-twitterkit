@@ -26,10 +26,15 @@ import java.util.TimerTask;
 //1. clean the code and use only one thread
 //2. make one log class to be able to show or not show logs
 //3. add progress bar
-
+//4. fix heart/like button
+//User authorization required
+//        com.twitter.sdk.android.core.TwitterAuthException: User authorization required
+//        at com.twitter.sdk.android.tweetui.TweetRepository.getUserSession(TweetRepository.java:149)
+//        at com.twitter.sdk.android.tweetui.TweetRepository.favorite(TweetRepository.java:107)
+//        at com.twitter.sdk.android.tweetui.LikeTweetAction.onClick(LikeTweetAction.java:65)
 //some important things
 //1. must use customtweetview instead of compacttweetview
-//2. must use xml
+//2. must use xml for CompactTweetView, it seems it does not work if CustomTweetView is created from code
 //3. set own imageloader
 //4. must have these states in react view
 //5. use relativelayout for better appeareance
@@ -104,7 +109,7 @@ public class RNTwitterKitView extends RelativeLayout {
     private int counter = 0;
     private Timer timer;
 
-    private void requestLayoutWithDelay(final Tweet tweet) {
+    private void requestLayoutWithDelay() {
         timer = new Timer();
         timer.schedule(new TimerTask() {
                            //@Override
@@ -115,6 +120,8 @@ public class RNTwitterKitView extends RelativeLayout {
                                    tweetMainContainer.post(new Runnable() {
                                        @Override
                                        public void run() {
+                                           errorContainer.setVisibility(View.INVISIBLE);
+                                           loadingContainer.setVisibility(View.INVISIBLE);
                                            tweetView.setVisibility(View.VISIBLE);
                                            tweetView.requestLayout();
                                        }
@@ -129,20 +136,8 @@ public class RNTwitterKitView extends RelativeLayout {
     //end
     private void setTweetView(Tweet tweet) {
         android.util.Log.d(TAG, "setTweetView, tweet.text = " + tweet.text + ", tweet.id = " + tweet.id);
-        errorContainer.setVisibility(View.INVISIBLE);
-        loadingContainer.setVisibility(View.INVISIBLE);
         tweetView.setTweet(tweet);
-//        if(tweetView == null){
-//            tweetView = new CustomTweetView(getContext(),tweet);
-//            RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
-//            layoutParams.addRule(RelativeLayout.CENTER_IN_PARENT);
-//            tweetView.setLayoutParams(layoutParams);
-//            tweetView.setVisibility(View.VISIBLE);
-//            tweetMainContainer.addView(tweetView);
-//        }
-        requestLayoutWithDelay(tweet);
-
-        //tweetMainContainer.requestLayout();
+        requestLayoutWithDelay();
     }
 
     private void setErrorView() {
