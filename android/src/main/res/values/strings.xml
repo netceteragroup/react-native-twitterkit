@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="url">http://69.41.54.111/php/images/sibiu.jpg</string>
+    <!-- A sample Brightcove Edge Account ID -->
+    <string name="account">4772533039001</string>
+
+    <!-- A sample Brightcove Edge Policy Key -->
+    <string name="policy">BCpkADawqM1CmLU_NRRct02h_NHz1WnONNeRnXKu0AcNFaXDfk8i2yYzb2p9_Z_LsYA-HpFEJzUwxtt8l8QDHLD_K0wpdAjvwRNgu46i5PPs4zj1vPVC6Wy4FBbfh9zm7JuYWd_mf2-uIyGB</string>
+
+    <!-- A sample Brightcove Video ID -->
+    <string name="videoId">5382299580001</string>
+
+</resources>

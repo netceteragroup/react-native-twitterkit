@@ -6,11 +6,11 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.Callback;
 
-public class RNTwitterkitModule extends ReactContextBaseJavaModule {
+public class RNTwitterKitModule extends ReactContextBaseJavaModule {
 
   private final ReactApplicationContext reactContext;
 
-  public RNTwitterkitModule(ReactApplicationContext reactContext) {
+  public RNTwitterKitModule(ReactApplicationContext reactContext) {
     super(reactContext);
     this.reactContext = reactContext;
   }

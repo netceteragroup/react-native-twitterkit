@@ -7,8 +7,7 @@ import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
-import com.netcetera.reactnative.twitterkit.RNTwitterkitModule;
-import com.netcetera.reactnative.twitterkit.RNTwitterkitPackage;
+import com.netcetera.reactnative.twitterkit.RNTwitterKitPackage;
 
 import java.util.Arrays;
 import java.util.List;
@@ -25,7 +24,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
-          new RNTwitterkitPackage()
+          new RNTwitterKitPackage()
       );
     }
   };
@@ -39,5 +38,8 @@ public class MainApplication extends Application implements ReactApplication {
   public void onCreate() {
     super.onCreate();
     SoLoader.init(this, /* native exopackage */ false);
+    //initWithInflate fabric
+    RNTwitterKitPackage.initFabric(getApplicationContext());
   }
+
 }

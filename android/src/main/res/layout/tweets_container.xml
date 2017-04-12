@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:id="@+id/main_container"
+    android:orientation="vertical"
+    android:background="@android:color/black"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:twittersdk="http://schemas.android.com/apk/res-auto">
+
+</LinearLayout>
+<!--
+    <com.twitter.sdk.android.tweetui.TweetView
+        style="@style/tw__TweetDarkWithActionsStyle"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:layout_centerInParent="true"
+        android:id="@+id/simple_tweet"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        twittersdk:tw__tweet_id="846231685750439936"/>
+-->
+<!--
+style="@style/tw__TweetDarkWithActionsStyle"
+<com.twitter.sdk.android.tweetui.BaseTweetView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:twittersdk="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/tweets_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    twittersdk:tw__tweet_id="510908133917487104" />
+-->
