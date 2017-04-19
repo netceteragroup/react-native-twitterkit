@@ -24,11 +24,17 @@ export default class example extends Component {
   render() {
     return (
       <View style={styles.container}>
+	  	<Text style={styles.instructions}>
+           Tweet that works
+         </Text>
 		<RNTwitterKitView
-			style={styles.twitter}
+			style={styles.twitter_that_works}
 			tweetid={'828627783119208449'}/>			      
+		<Text style={styles.instructions}>
+           Tweet that does not work
+         </Text>
 		<RNTwitterKitView
-			style={styles.twitter}
+			style={styles.twitter_that_doesnot_work}
 			tweetid={'1'}/>			      
       </View>
     );
@@ -47,10 +53,15 @@ const styles = StyleSheet.create({
 		textAlign: 'center',
 		color: '#FF0000',
 	},
-	twitter: {
+	twitter_that_works: {
 	  flex: 0,
       width: 400,
       height: 325,
+	},
+	twitter_that_doesnot_work: {
+	  flex: 0,
+      width: 400,
+      height: 300,
 	},
 });
 
