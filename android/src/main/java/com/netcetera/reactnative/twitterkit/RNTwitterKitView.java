@@ -7,6 +7,11 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
+import com.facebook.react.bridge.Arguments;
+import com.facebook.react.bridge.ReactContext;
+import com.facebook.react.bridge.WritableMap;
+import com.facebook.react.modules.core.DeviceEventManagerModule;
+import com.facebook.react.uimanager.events.RCTEventEmitter;
 import com.twitter.sdk.android.core.Callback;
 import com.twitter.sdk.android.core.Result;
 import com.twitter.sdk.android.core.TwitterException;
@@ -19,13 +24,12 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-//to investigate, possible issues
-//it seems that 846231685750439936 default id is loaded from cache from time to time
-//investigate cache on twitter
+//fixed
+//1. added progress bar
+//2. it seems that 846231685750439936 default id is loaded from cache from time to time, investigate cache on twitter
 //todo
 //1. clean the code and use only one thread
 //2. make one log class to be able to show or not show logs
-//3. add progress bar
 //4. fix heart/like button
 //User authorization required
 //        com.twitter.sdk.android.core.TwitterAuthException: User authorization required
@@ -51,7 +55,7 @@ public class RNTwitterKitView extends RelativeLayout {
     public RNTwitterKitView(Context context, Activity activity) {
         super(context);
         android.util.Log.d(TAG, "RNTwitterKitView");
-        ViewGroup.LayoutParams layoutParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        RelativeLayout.LayoutParams layoutParams = new LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
         setLayoutParams(layoutParams);
         initTweetContent(activity);
     }
@@ -106,6 +110,7 @@ public class RNTwitterKitView extends RelativeLayout {
 
     //start
 
+
     private int counter = 0;
     private Timer timer;
 
@@ -115,7 +120,14 @@ public class RNTwitterKitView extends RelativeLayout {
                            //@Override
                            public void run() {
                                //some delay to allow the tweet to fully load
-                               if (counter == 2) {
+                               if (counter == 1) {
+                                   tweetMainContainer.post(new Runnable() {
+                                       @Override
+                                       public void run() {
+                                           tweetView.setTweet(globalTweet);
+                                       }
+                                   });
+                               } else if (counter == 2) {
                                    timer.cancel();
                                    tweetMainContainer.post(new Runnable() {
                                        @Override
@@ -124,6 +136,13 @@ public class RNTwitterKitView extends RelativeLayout {
                                            loadingContainer.setVisibility(View.INVISIBLE);
                                            tweetView.setVisibility(View.VISIBLE);
                                            tweetView.requestLayout();
+                                           RNTwitterKitModule.sendToJs(getContext());
+                                           //RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);//ViewGroup.LayoutParams.WRAP_CONTENT);
+                                           //RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(500,500);
+                                           //tweetMainContainer.setLayoutParams(layoutParams);
+                                           //tweetMainContainer.requestLayout();
+
+                                           //tweetView.requestLayout();
                                        }
                                    });
                                }
@@ -134,9 +153,12 @@ public class RNTwitterKitView extends RelativeLayout {
     }
 
     //end
+    private Tweet globalTweet = null;
+
     private void setTweetView(Tweet tweet) {
+        globalTweet = tweet;
         android.util.Log.d(TAG, "setTweetView, tweet.text = " + tweet.text + ", tweet.id = " + tweet.id);
-        tweetView.setTweet(tweet);
+        tweetView.setTweet(null);
         requestLayoutWithDelay();
     }
 
@@ -182,4 +204,33 @@ public class RNTwitterKitView extends RelativeLayout {
         this.tweetId = tweetId;
     }
 
+    @Override
+    public void requestLayout() {
+        super.requestLayout();
+        //if(tweetView != null && tweetView.getVisibility() == View.VISIBLE) {
+            post(measureAndLayout);
+        //}
+    }
+
+
+    private final Runnable measureAndLayout = new Runnable() {
+        @Override
+        public void run() {
+
+            int width = getMeasuredWidth();
+            int height = getMeasuredHeight();
+            int bottom = getBottom();
+
+            if (height > 0) {
+                height = Math.max(height,width);
+                bottom = getTop() + height;
+            }
+
+            android.util.Log.d(TAG, "width = " + width + ", height = " + height + ", left = " + getLeft() + ", top = " + getTop() + "right = " + getRight() + ", bottom = " + bottom);
+
+            measure(MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY),
+                    MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY));
+            layout(getLeft(), getTop(), getRight(), bottom);
+        }
+    };
 }

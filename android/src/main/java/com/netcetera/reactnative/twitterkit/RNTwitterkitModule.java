@@ -1,10 +1,16 @@
 
 package com.netcetera.reactnative.twitterkit;
 
+import android.content.Context;
+
+import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReactApplicationContext;
+import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.Callback;
+import com.facebook.react.bridge.WritableMap;
+import com.facebook.react.modules.core.DeviceEventManagerModule;
 
 public class RNTwitterKitModule extends ReactContextBaseJavaModule {
 
@@ -18,5 +24,16 @@ public class RNTwitterKitModule extends ReactContextBaseJavaModule {
   @Override
   public String getName() {
     return "RNTwitterkit";
+  }
+
+  public static void sendToJs(Context context){
+
+    WritableMap params = Arguments.createMap();
+    params.putString("height", "350");
+    ReactContext reactContext = (ReactContext)context;
+
+    reactContext
+            .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+            .emit("TweetDidLoad", params);
   }
 }

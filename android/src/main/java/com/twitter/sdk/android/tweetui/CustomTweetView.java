@@ -35,15 +35,29 @@ public class CustomTweetView extends CompactTweetView{
     @Override
     public void requestLayout() {
         super.requestLayout();
-        post(measureAndLayout);
+        //if(tweet != null) {
+            post(measureAndLayout);
+        //}
     }
 
     private final Runnable measureAndLayout = new Runnable() {
         @Override
         public void run() {
-            measure(MeasureSpec.makeMeasureSpec(getWidth(), MeasureSpec.EXACTLY),
-                    MeasureSpec.makeMeasureSpec(getHeight(), MeasureSpec.EXACTLY));
-            layout(getLeft(), getTop(), getRight(), getBottom());
+
+            int width = getMeasuredWidth();
+            int height = getMeasuredHeight();
+            int bottom = getBottom();
+
+            if(height > 0) {
+                height = Math.max(height, width);
+                bottom = getTop() + height;
+            }
+
+            android.util.Log.d(TAG, "width = "  + width + ", height = " + height + ", left = "  + getLeft() + ", top = " + getTop() + "right = "  + getRight() + ", bottom = " + bottom);
+
+            measure(MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY),
+                    MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY));
+            layout(getLeft(), getTop(), getRight(), bottom);
         }
     };
 }

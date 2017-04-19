@@ -48,11 +48,14 @@ export default class example extends Component {
     return (
       <View style={styles.container}>
 	  <Text style={styles.instructions}>
-          Tweet with entities
+          JS Header
         </Text>
 		<RNTwitterKitView 
 			style={styles.image}
 			tweetid={'510908133917487104'}/>			      
+			<Text style={styles.instructions}>
+          JS Footer
+        </Text>
       </View>
     );
   }
@@ -79,12 +82,12 @@ const styles = StyleSheet.create({
 	image: {
 		flex: 0,
       width: 400,
-      height: 400,
+      height: 200,
 	},
 	image2: {
 		flex: 0,
       width: 400,
-      height: 400,
+      height: 200,
 	}
 });
 
