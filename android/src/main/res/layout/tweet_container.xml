@@ -45,7 +45,36 @@
     </RelativeLayout>
 
     <RelativeLayout
+        android:id="@+id/reload_container"
+        android:background="@android:color/white"
+        android:layout_centerInParent="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="invisible">
+
+        <ImageView
+            android:id="@+id/reload_button"
+            android:layout_width="@dimen/reload_button_width"
+            android:layout_height="@dimen/reload_button_height"
+            android:layout_centerInParent="true"
+            android:src="@drawable/tweet_reload" />
+
+        <TextView
+            android:id="@+id/reload_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:text="@string/reload_text"
+            android:textColor="@android:color/black"
+            android:textSize="16sp" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
         android:id="@+id/error_container"
+        android:background="@android:color/white"
         android:layout_centerInParent="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -56,7 +85,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:src="@drawable/error_image" />
+            android:src="@drawable/tweet_error" />
 
         <TextView
             android:id="@+id/error_text"
@@ -65,7 +94,7 @@
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             android:gravity="center"
-            android:text="error"
+            android:text="@string/error_text"
             android:textColor="@android:color/black"
             android:textSize="16sp" />
 

@@ -3,11 +3,8 @@ package com.twitter.sdk.android.tweetui;
 import android.content.Context;
 import android.util.AttributeSet;
 
+import com.netcetera.reactnative.twitterkit.LogUtils;
 import com.twitter.sdk.android.core.models.Tweet;
-
-/**
- * Created by admin on 12/04/2017.
- */
 
 public class CustomTweetView extends CompactTweetView{
 
@@ -42,15 +39,7 @@ public class CustomTweetView extends CompactTweetView{
         @Override
         public void run() {
 
-//            int width = getMeasuredWidth();
-//            int height = getMeasuredHeight();
-//            int bottom = getBottom();
-//
-//            if(height > 0) {
-//                bottom = getTop() + height;
-//            }
-
-//            android.util.Log.d(TAG, "width = "  + width + ", height = " + height + ", left = "  + getLeft() + ", top = " + getTop() + "right = "  + getRight() + ", bottom = " + bottom);
+            LogUtils.d(TAG, "width = " + getWidth() + ", height = " + getHeight() + ", left = " + getLeft() + ", top = " + getTop() + "right = " + getRight() + ", bottom = " + getBottom());
 
             measure(MeasureSpec.makeMeasureSpec(getWidth(), MeasureSpec.EXACTLY),
                     MeasureSpec.makeMeasureSpec(getHeight(), MeasureSpec.EXACTLY));

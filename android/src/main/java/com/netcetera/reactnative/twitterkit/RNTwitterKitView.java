@@ -3,15 +3,9 @@ package com.netcetera.reactnative.twitterkit;
 import android.app.Activity;
 import android.content.Context;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.LinearLayout;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
-import com.facebook.react.bridge.Arguments;
-import com.facebook.react.bridge.ReactContext;
-import com.facebook.react.bridge.WritableMap;
-import com.facebook.react.modules.core.DeviceEventManagerModule;
-import com.facebook.react.uimanager.events.RCTEventEmitter;
 import com.twitter.sdk.android.core.Callback;
 import com.twitter.sdk.android.core.Result;
 import com.twitter.sdk.android.core.TwitterException;
@@ -55,23 +49,21 @@ public class RNTwitterKitView extends RelativeLayout {
 
     public RNTwitterKitView(Context context, Activity activity) {
         super(context);
-        android.util.Log.d(TAG, "RNTwitterKitView");
+        LogUtils.d(TAG, "RNTwitterKitView");
         RelativeLayout.LayoutParams layoutParams = new LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
         setLayoutParams(layoutParams);
         initTweetContent(activity);
     }
 
     private void initTweetContent(Activity activity) {
-        android.util.Log.d(TAG, "initTweetContent");
+        LogUtils.d(TAG, "initTweetContent");
         //TweetUiWrapper.init(activity);
         tweetMainContainer = (RelativeLayout) activity.getLayoutInflater().inflate(R.layout.tweet_container, null);
         //LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);//ViewGroup.LayoutParams.WRAP_CONTENT);
         //tweetMainContainer.setLayoutParams(layoutParams);
         this.addView(tweetMainContainer);
 
-        loadingContainer = (RelativeLayout) tweetMainContainer.findViewById(R.id.loading_container);
-        errorContainer = (RelativeLayout) tweetMainContainer.findViewById(R.id.error_container);
-        tweetView = (CustomTweetView) findViewById(R.id.tweet_view);
+        findViews();
 
         setLoadingView();
 
@@ -96,21 +88,11 @@ public class RNTwitterKitView extends RelativeLayout {
 
     private RelativeLayout tweetMainContainer;
 
+    private ImageView reloadButton;
+    private RelativeLayout reloadContainer;
     private RelativeLayout errorContainer;
-    private CustomTweetView tweetView = null;
+    private CustomTweetView tweetView;
     private RelativeLayout loadingContainer;
-
-    private void setLoadingView() {
-        android.util.Log.d(TAG, "setLoadingView");
-        errorContainer.setVisibility(View.INVISIBLE);
-        if (tweetView != null) {
-            tweetView.setVisibility(View.INVISIBLE);
-        }
-        loadingContainer.setVisibility(View.VISIBLE);
-    }
-
-    //start
-
 
     private int counter = 0;
     private Timer timer;
@@ -133,17 +115,8 @@ public class RNTwitterKitView extends RelativeLayout {
                                    tweetMainContainer.post(new Runnable() {
                                        @Override
                                        public void run() {
-                                           errorContainer.setVisibility(View.INVISIBLE);
-                                           loadingContainer.setVisibility(View.INVISIBLE);
-                                           tweetView.setVisibility(View.VISIBLE);
-                                           tweetView.requestLayout();
-                                           RNTwitterKitModule.sendToJs(getContext());
-                                           //RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);//ViewGroup.LayoutParams.WRAP_CONTENT);
-                                           //RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(500,500);
-                                           //tweetMainContainer.setLayoutParams(layoutParams);
-                                           //tweetMainContainer.requestLayout();
-
-                                           //tweetView.requestLayout();
+                                           setTweetView();
+                                           //RNTwitterKitModule.sendToJs(getContext());
                                        }
                                    });
                                }
@@ -153,46 +126,96 @@ public class RNTwitterKitView extends RelativeLayout {
                 , 0, 1000);//Update text every second
     }
 
-    //end
     private Tweet globalTweet = null;
 
-    private void setTweetView(Tweet tweet) {
+    private void setTweetAndRequestLayout(Tweet tweet) {
         globalTweet = tweet;
-        android.util.Log.d(TAG, "setTweetView, tweet.text = " + tweet.text + ", tweet.id = " + tweet.id);
+        LogUtils.d(TAG, "setTweetView, tweet.text = " + tweet.text + ", tweet.id = " + tweet.id);
         tweetView.setTweet(null);
         requestLayoutWithDelay();
     }
 
-    private void setErrorView() {
-        android.util.Log.d(TAG, "setErrorView");
-        errorContainer.setVisibility(View.VISIBLE);
-        if (tweetView != null) {
-            tweetView.setVisibility(View.INVISIBLE);
-        }
+    private void findViews(){
+        loadingContainer = (RelativeLayout) tweetMainContainer.findViewById(R.id.loading_container);
+        reloadContainer = (RelativeLayout) findViewById(R.id.reload_container);
+        errorContainer = (RelativeLayout) tweetMainContainer.findViewById(R.id.error_container);
+        tweetView = (CustomTweetView) findViewById(R.id.tweet_view);
+        reloadButton = (ImageView)findViewById(R.id.reload_button);
+    }
+
+    private void setTweetView(){
+        errorContainer.setVisibility(View.INVISIBLE);
+        reloadContainer.setVisibility(View.INVISIBLE);
         loadingContainer.setVisibility(View.INVISIBLE);
+        tweetView.setVisibility(View.VISIBLE);
+        tweetView.requestLayout();
+    }
+
+    private void setLoadingView() {
+        LogUtils.d(TAG, "setLoadingView");
+        errorContainer.setVisibility(View.INVISIBLE);
+        reloadContainer.setVisibility(View.INVISIBLE);
+        tweetView.setVisibility(View.INVISIBLE);
+        loadingContainer.setVisibility(View.VISIBLE);
+    }
+
+    private void setErrorView(){
+        LogUtils.d(TAG, "setErrorView");
+        reloadContainer.setVisibility(View.INVISIBLE);
+        loadingContainer.setVisibility(View.INVISIBLE);
+        tweetView.setVisibility(View.INVISIBLE);
+        errorContainer.setVisibility(View.VISIBLE);
+    }
+
+    private int errorCounter = 0;
+
+    private void setErrorOrReloadView() {
+        LogUtils.d(TAG, "setErrorOrReloadView");
+        if(errorCounter < 3){
+            setReloadView();
+        } else {
+            setErrorView();
+        }
+        errorCounter ++;
+    }
+
+    private void setReloadView() {
+        LogUtils.d(TAG, "setReloadView");
+        loadingContainer.setVisibility(View.INVISIBLE);
+        tweetView.setVisibility(View.INVISIBLE);
+        errorContainer.setVisibility(View.INVISIBLE);
+        reloadContainer.setVisibility(View.VISIBLE);
+        reloadButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setLoadingView();
+                loadTweet();
+            }
+        });
     }
 
     private void loadTweet() {
-        android.util.Log.d(TAG, "loadTweet, tweetId = " + tweetId);
+        LogUtils.d(TAG, "loadTweet, tweetId = " + tweetId);
         final List<Long> tweetIds = Arrays.asList(tweetId);//);
         TweetUtils.loadTweets(tweetIds, new Callback<List<Tweet>>() {
             @Override
             public void success(Result<List<Tweet>> result) {
-                android.util.Log.d(TAG, "loadTweet, success");
+                LogUtils.d(TAG, "loadTweet, success");
+                Tweet selectedTweet = null;
                 for (Tweet tweet : result.data) {
-                    android.util.Log.d(TAG, "loadTweet, success, tweet.text = " + tweet.text);
-                    setTweetView(tweet);
-
-                    //debug
-//                    Gson gson = new Gson();
-//                    String json = gson.toJson(tweet);
-//                    Log.d(TAG,"json " + tweetId + " = " + json);
+                    LogUtils.d(TAG, "loadTweet, success, tweet.text = " + tweet.text);
+                    selectedTweet = tweet;
+                    setTweetAndRequestLayout(tweet);
+                    //LogUtils.debugJson(tweet);
+                }
+                if(selectedTweet == null){
+                    setErrorOrReloadView();
                 }
             }
 
             @Override
             public void failure(TwitterException exception) {
-                android.util.Log.d(TAG, "loadTweet, failure");
+                LogUtils.d(TAG, "loadTweet, failure");
                 setErrorView();
             }
         });
@@ -201,7 +224,7 @@ public class RNTwitterKitView extends RelativeLayout {
     private long tweetId = 0L;
 
     public void setTweetId(long tweetId) {
-        android.util.Log.d(TAG, "setTweetId, tweetId = " + tweetId);
+        LogUtils.d(TAG, "setTweetId, tweetId = " + tweetId);
         this.tweetId = tweetId;
     }
 
@@ -211,20 +234,16 @@ public class RNTwitterKitView extends RelativeLayout {
         post(measureAndLayout);
     }
 
-
     private final Runnable measureAndLayout = new Runnable() {
         @Override
         public void run() {
 
-            //int width = getMeasuredWidth();
-            //int height = getMeasuredHeight();
-            //int bottom = getTop() + height;
-
-            //android.util.Log.d(TAG, "width = " + width + ", height = " + height + ", left = " + getLeft() + ", top = " + getTop() + "right = " + getRight() + ", bottom = " + bottom);
+            LogUtils.d(TAG, "width = " + getWidth() + ", height = " + getHeight() + ", left = " + getLeft() + ", top = " + getTop() + "right = " + getRight() + ", bottom = " + getBottom());
 
             measure(MeasureSpec.makeMeasureSpec(getWidth(), MeasureSpec.EXACTLY),
                     MeasureSpec.makeMeasureSpec(getHeight(), MeasureSpec.EXACTLY));
             layout(getLeft(), getTop(), getRight(), getBottom());
         }
     };
+
 }

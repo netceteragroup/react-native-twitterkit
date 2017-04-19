@@ -26,6 +26,8 @@ public class RNTwitterKitModule extends ReactContextBaseJavaModule {
     return "RNTwitterkit";
   }
 
+  //this function can be used to send a value to JS
+  //height can be used as a parameter
   public static void sendToJs(Context context){
 
     WritableMap params = Arguments.createMap();

@@ -1,5 +1,6 @@
 /**
 test tweets
+828627783119208449 - official tweet, taken from here: https://www.nzz.ch/sport/ski-wm-in-st-moritz-der-elektronische-russi-ld.143827
 510908133917487104
 846231685750439936
 260244087901413376
@@ -26,7 +27,7 @@ export default class example extends Component {
         </Text>
 		<RNTwitterKitView
 			style={styles.twitter}
-			tweetid={'846231685750439936'}/>			      
+			tweetid={'1'}/>			      
 		<Text style={styles.instructions}>
           JS text footer
         </Text>
