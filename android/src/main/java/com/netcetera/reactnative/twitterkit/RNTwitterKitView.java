@@ -28,6 +28,7 @@ import java.util.TimerTask;
 //1. added progress bar
 //2. it seems that 846231685750439936 default id is loaded from cache from time to time, investigate cache on twitter
 //todo
+//0. decide about refresh and error
 //1. clean the code and use only one thread
 //2. make one log class to be able to show or not show logs
 //4. fix heart/like button
@@ -55,7 +56,7 @@ public class RNTwitterKitView extends RelativeLayout {
     public RNTwitterKitView(Context context, Activity activity) {
         super(context);
         android.util.Log.d(TAG, "RNTwitterKitView");
-        RelativeLayout.LayoutParams layoutParams = new LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+        RelativeLayout.LayoutParams layoutParams = new LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
         setLayoutParams(layoutParams);
         initTweetContent(activity);
     }
@@ -207,9 +208,7 @@ public class RNTwitterKitView extends RelativeLayout {
     @Override
     public void requestLayout() {
         super.requestLayout();
-        //if(tweetView != null && tweetView.getVisibility() == View.VISIBLE) {
-            post(measureAndLayout);
-        //}
+        post(measureAndLayout);
     }
 
 
@@ -217,20 +216,15 @@ public class RNTwitterKitView extends RelativeLayout {
         @Override
         public void run() {
 
-            int width = getMeasuredWidth();
-            int height = getMeasuredHeight();
-            int bottom = getBottom();
+            //int width = getMeasuredWidth();
+            //int height = getMeasuredHeight();
+            //int bottom = getTop() + height;
 
-            if (height > 0) {
-                height = Math.max(height,width);
-                bottom = getTop() + height;
-            }
+            //android.util.Log.d(TAG, "width = " + width + ", height = " + height + ", left = " + getLeft() + ", top = " + getTop() + "right = " + getRight() + ", bottom = " + bottom);
 
-            android.util.Log.d(TAG, "width = " + width + ", height = " + height + ", left = " + getLeft() + ", top = " + getTop() + "right = " + getRight() + ", bottom = " + bottom);
-
-            measure(MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY),
-                    MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY));
-            layout(getLeft(), getTop(), getRight(), bottom);
+            measure(MeasureSpec.makeMeasureSpec(getWidth(), MeasureSpec.EXACTLY),
+                    MeasureSpec.makeMeasureSpec(getHeight(), MeasureSpec.EXACTLY));
+            layout(getLeft(), getTop(), getRight(), getBottom());
         }
     };
 }

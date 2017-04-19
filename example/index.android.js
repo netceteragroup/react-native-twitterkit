@@ -1,36 +1,9 @@
 /**
- * Sample React Native App
- * https://github.com/facebook/react-native
- * @flow
- tweetid={styles.image.width}
- backgroundColor: '#000000',
- image 50x50
- 		flex: 0,
-		width: 50,
-		height: 50,	
-				backgroundColor: '#0000FF',
-				510908133917487104
-				846231685750439936
-				260244087901413376
-				20
-				<RNTwitterKitView 
-			style={styles.image2}
-			tweetid={'260244087901413376'}/>
-        <Text style={styles.instructions}>
-          To get started, edit index.android.js
-        </Text>
-        <Text style={styles.instructions}>
-          Double tap R on your keyboard to reload,{'\n'}
-          Shake device for dev menu
-        </Text>
-		
-		<Text style={styles.instructions}>
-          Tweet with entities
-        </Text>
-		<RNTwitterKitView 
-			style={styles.image}
-			tweetid={'846231685750439936'}/>		
-			
+test tweets
+510908133917487104
+846231685750439936
+260244087901413376
+20		
  */
 
 import React, { Component } from 'react';
@@ -44,17 +17,18 @@ import {
 import RNTwitterKitView from './RNTwitterKitView';
 
 export default class example extends Component {
+	
   render() {
     return (
       <View style={styles.container}>
-	  <Text style={styles.instructions}>
-          JS Header
+		<Text style={styles.instructions}>
+          JS text header
         </Text>
-		<RNTwitterKitView 
-			style={styles.image}
-			tweetid={'510908133917487104'}/>			      
-			<Text style={styles.instructions}>
-          JS Footer
+		<RNTwitterKitView
+			style={styles.twitter}
+			tweetid={'846231685750439936'}/>			      
+		<Text style={styles.instructions}>
+          JS text footer
         </Text>
       </View>
     );
@@ -67,7 +41,7 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
-		backgroundColor: '#F5FCFF',
+		backgroundColor: '#EEEEEE',
 	},
 	welcome: {
 		fontSize: 20,
@@ -76,19 +50,14 @@ const styles = StyleSheet.create({
 	},
 	instructions: {
 		textAlign: 'center',
-		color: '#333333',
+		color: '#FF0000',
 		marginBottom: 5,
 	},
-	image: {
-		flex: 0,
+	twitter: {
+	  flex: 0,
       width: 400,
-      height: 200,
+      height: 400,
 	},
-	image2: {
-		flex: 0,
-      width: 400,
-      height: 200,
-	}
 });
 
 AppRegistry.registerComponent('example', () => example);

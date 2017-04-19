@@ -4,14 +4,15 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:twittersdk="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
     <com.twitter.sdk.android.tweetui.CustomTweetView
-        android:layout_centerInParent="true"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
         android:visibility="invisible"
         android:id="@+id/tweet_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         twittersdk:tw__tweet_actions_enabled="true"
         twittersdk:tw__tweet_id="846231685750439936"/>
 
@@ -19,7 +20,7 @@
         android:id="@+id/loading_container"
         android:layout_centerInParent="true"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:visibility="visible">
 
         <ProgressBar
@@ -47,7 +48,7 @@
         android:id="@+id/error_container"
         android:layout_centerInParent="true"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:visibility="invisible">
 
         <ImageView
