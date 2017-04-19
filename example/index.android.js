@@ -5,6 +5,8 @@ test tweets
 846231685750439936
 260244087901413376
 20		
+1 - tweet that does not work
+test on nexus 5
  */
 
 import React, { Component } from 'react';
@@ -22,15 +24,12 @@ export default class example extends Component {
   render() {
     return (
       <View style={styles.container}>
-		<Text style={styles.instructions}>
-          JS text header
-        </Text>
+		<RNTwitterKitView
+			style={styles.twitter}
+			tweetid={'828627783119208449'}/>			      
 		<RNTwitterKitView
 			style={styles.twitter}
 			tweetid={'1'}/>			      
-		<Text style={styles.instructions}>
-          JS text footer
-        </Text>
       </View>
     );
   }
@@ -44,20 +43,14 @@ const styles = StyleSheet.create({
         alignItems: 'center',
 		backgroundColor: '#EEEEEE',
 	},
-	welcome: {
-		fontSize: 20,
-		textAlign: 'center',
-		margin: 10,
-	},
 	instructions: {
 		textAlign: 'center',
 		color: '#FF0000',
-		marginBottom: 5,
 	},
 	twitter: {
 	  flex: 0,
       width: 400,
-      height: 400,
+      height: 325,
 	},
 });
 
