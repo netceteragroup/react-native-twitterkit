@@ -1,7 +1,12 @@
 /**
- * Sample React Native App
- * https://github.com/facebook/react-native
- * @flow
+test tweets
+828627783119208449 - official tweet, taken from here: https://www.nzz.ch/sport/ski-wm-in-st-moritz-der-elektronische-russi-ld.143827
+510908133917487104
+846231685750439936
+260244087901413376
+20		
+1 - tweet that does not work
+test on nexus 5
  */
 
 import React, { Component } from 'react';
@@ -9,45 +14,55 @@ import {
   AppRegistry,
   StyleSheet,
   Text,
-  View
+  View,
 } from 'react-native';
 
+import RNTwitterKitView from './RNTwitterKitView';
+
 export default class example extends Component {
+	
   render() {
     return (
       <View style={styles.container}>
-        <Text style={styles.welcome}>
-          Welcome to React Native!
-        </Text>
-        <Text style={styles.instructions}>
-          To get started, edit index.android.js
-        </Text>
-        <Text style={styles.instructions}>
-          Double tap R on your keyboard to reload,{'\n'}
-          Shake or press menu button for dev menu
-        </Text>
+	  	<Text style={styles.instructions}>
+           Good Tweet
+         </Text>
+		<RNTwitterKitView
+			style={styles.twitter_that_works}
+			tweetid={'828627783119208449'}/>			      
+		<Text style={styles.instructions}>
+           Bad Tweet
+         </Text>
+		<RNTwitterKitView
+			style={styles.twitter_that_doesnot_work}
+			tweetid={'1'}/>			      
       </View>
     );
   }
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
+	container: {
+		flex: 1,
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+		backgroundColor: '#EEEEEE',
+	},
+	instructions: {
+		textAlign: 'center',
+		color: '#000000',
+	},
+	twitter_that_works: {
+	  flex: 0,
+      width: 400,
+      height: 325,
+	},
+	twitter_that_doesnot_work: {
+	  flex: 0,
+      width: 400,
+      height: 300,
+	},
 });
 
 AppRegistry.registerComponent('example', () => example);

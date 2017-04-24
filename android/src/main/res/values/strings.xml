@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="reload_text">Das Element konnte nicht geladen werden.</string>
+    <string name="error_text">Das Element konnte nicht geladen werden.</string>
+
+</resources>

@@ -1,0 +1,6 @@
+<resources>
+
+    <dimen name="reload_button_width">50dp</dimen>
+    <dimen name="reload_button_height">50dp</dimen>
+
+</resources>
