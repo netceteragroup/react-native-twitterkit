@@ -13,7 +13,7 @@ public class RNTwitterKitViewManager extends SimpleViewManager<RNTwitterKitView>
 
     private static final String TAG = RNTwitterKitViewManager.class.getCanonicalName();
 
-    public static final String REACT_CLASS = "RNTwitterKitViewManager";
+    public static final String REACT_CLASS = "RNTwitterKitView";
 
     private
     @Nullable
