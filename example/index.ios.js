@@ -12,9 +12,7 @@ import {
   View
 } from 'react-native';
 
-//import { NativeModules } from 'react-native';
-//import { requireNativeComponent } from 'react-native';
-import TweetView from './TweetView';
+import { TweetView } from './TwitterKit';
 
 //var myVar = NativeModules.TweetViewManager;
 

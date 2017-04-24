@@ -4,7 +4,7 @@ test tweets
 510908133917487104
 846231685750439936
 260244087901413376
-20		
+20
 1 - tweet that does not work
 test on nexus 5
  */
@@ -17,10 +17,10 @@ import {
   View,
 } from 'react-native';
 
-import TweetView from './TweetView';
+import { TweetView } from './TwitterKit';
 
 export default class example extends Component {
-	
+
   render() {
     return (
       <View style={styles.container}>
@@ -29,13 +29,13 @@ export default class example extends Component {
          </Text>
 		<TweetView
 			style={styles.twitter_that_works}
-			tweetid={'828627783119208449'}/>			      
+			tweetid={'828627783119208449'}/>
 		<Text style={styles.instructions}>
            Bad Tweet
          </Text>
 		<TweetView
 			style={styles.twitter_that_doesnot_work}
-			tweetid={'1'}/>			      
+			tweetid={'1'}/>
       </View>
     );
   }
