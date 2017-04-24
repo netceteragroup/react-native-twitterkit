@@ -209,14 +209,16 @@ public class RNTwitterKitView extends RelativeLayout {
                     //LogUtils.debugJson(tweet);
                 }
                 if(selectedTweet == null){
-                    setErrorOrReloadView();
+                    setReloadView();
+                    //setErrorOrReloadView();
                 }
             }
 
             @Override
             public void failure(TwitterException exception) {
                 LogUtils.d(TAG, "loadTweet, failure");
-                setErrorView();
+                setReloadView();
+                //setErrorOrReloadView();
             }
         });
     }

@@ -25,13 +25,13 @@ export default class example extends Component {
     return (
       <View style={styles.container}>
 	  	<Text style={styles.instructions}>
-           Tweet that works
+           Good Tweet
          </Text>
 		<RNTwitterKitView
 			style={styles.twitter_that_works}
 			tweetid={'828627783119208449'}/>			      
 		<Text style={styles.instructions}>
-           Tweet that does not work
+           Bad Tweet
          </Text>
 		<RNTwitterKitView
 			style={styles.twitter_that_doesnot_work}
@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
 	},
 	instructions: {
 		textAlign: 'center',
-		color: '#FF0000',
+		color: '#000000',
 	},
 	twitter_that_works: {
 	  flex: 0,
