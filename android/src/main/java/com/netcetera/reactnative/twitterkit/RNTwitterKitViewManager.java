@@ -9,11 +9,9 @@ import com.facebook.react.uimanager.ThemedReactContext;
 import com.facebook.react.uimanager.annotations.ReactProp;
 import com.twitter.sdk.android.tweetui.TweetUiWrapper;
 
-public class RNTwitterKitViewManager extends SimpleViewManager<RNTwitterKitView> {
+public class RNTwitterKitViewManager extends SimpleViewManager<TweetView> {
 
     private static final String TAG = RNTwitterKitViewManager.class.getCanonicalName();
-
-    public static final String REACT_CLASS = "RNTwitterKitView";
 
     private
     @Nullable
@@ -40,18 +38,18 @@ public class RNTwitterKitViewManager extends SimpleViewManager<RNTwitterKitView>
 
     @Override
     public String getName() {
-        return REACT_CLASS;
+        return "TweetView";
     }
 
     @Override
-    public RNTwitterKitView createViewInstance(ThemedReactContext context) {
+    public TweetView createViewInstance(ThemedReactContext context) {
         TweetUiWrapper.init(context);
-        RNTwitterKitView view = new RNTwitterKitView(context, context.getCurrentActivity());
+        TweetView view = new TweetView(context, context.getCurrentActivity());
         return view;
     }
 
     @ReactProp(name = "tweetid")
-    public void setTweetId(RNTwitterKitView view, String strTweetId) {
+    public void setTweetId(TweetView view, String strTweetId) {
         Log.d(TAG, "setTweetId");
         long tweetId = Long.parseLong(strTweetId);
         view.setTweetId(tweetId);
