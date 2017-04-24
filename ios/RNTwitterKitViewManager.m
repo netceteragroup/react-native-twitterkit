@@ -12,7 +12,7 @@
 
 @implementation RNTwitterKitViewManager
 
-RCT_EXPORT_MODULE();
+RCT_EXPORT_MODULE(TweetView);
 RCT_REMAP_VIEW_PROPERTY(tweetid, TWEETID, NSString);
 
 @synthesize bridge = _bridge;

@@ -14,16 +14,16 @@ import {
 
 //import { NativeModules } from 'react-native';
 //import { requireNativeComponent } from 'react-native';
-import RNTwitterKitView from './RNTwitterKitView';
+import TweetView from './TweetView';
 
-//var myVar = NativeModules.RNTwitterKitViewManager;
+//var myVar = NativeModules.TweetViewManager;
 
 export default class example extends Component {
-  
+
   render() {
-  
+
   //myVar.setTweetID('846231685750439936');
-  
+
     return (
       <View style={styles.container}>
       <Text style={styles.welcome}>
@@ -32,15 +32,15 @@ export default class example extends Component {
       <Text style={styles.instructions}>
           This is a tweet without picture
         </Text>
-      	<RNTwitterKitView 
-      		style={styles.twitter1} 
+      	<TweetView
+      		style={styles.twitter1}
       		tweetid={'20'}
       		/>
       <Text style={styles.instructions}>
           And this one is a tweet with a picture
         </Text>
-      	<RNTwitterKitView 
-      		style={styles.twitter2} 
+      	<TweetView
+      		style={styles.twitter2}
       		tweetid={'846231685750439936'}
       		/>
         <Text style={styles.instructions}>
