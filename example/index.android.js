@@ -17,7 +17,7 @@ import {
   View,
 } from 'react-native';
 
-import RNTwitterKitView from './RNTwitterKitView';
+import TweetView from './TweetView';
 
 export default class example extends Component {
 	
@@ -27,13 +27,13 @@ export default class example extends Component {
 	  	<Text style={styles.instructions}>
            Good Tweet
          </Text>
-		<RNTwitterKitView
+		<TweetView
 			style={styles.twitter_that_works}
 			tweetid={'828627783119208449'}/>			      
 		<Text style={styles.instructions}>
            Bad Tweet
          </Text>
-		<RNTwitterKitView
+		<TweetView
 			style={styles.twitter_that_doesnot_work}
 			tweetid={'1'}/>			      
       </View>

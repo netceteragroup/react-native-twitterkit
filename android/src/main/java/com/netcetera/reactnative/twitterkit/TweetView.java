@@ -43,11 +43,11 @@ import java.util.TimerTask;
 //state_wait_for_property_tweetid
 //state_loading_from_server
 //state_wait_to_load_resources_before_showing
-public class RNTwitterKitView extends RelativeLayout {
+public class TweetView extends RelativeLayout {
 
-    private static final String TAG = RNTwitterKitView.class.getCanonicalName();
+    private static final String TAG = TweetView.class.getCanonicalName();
 
-    public RNTwitterKitView(Context context, Activity activity) {
+    public TweetView(Context context, Activity activity) {
         super(context);
         LogUtils.d(TAG, "RNTwitterKitView");
         RelativeLayout.LayoutParams layoutParams = new LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);

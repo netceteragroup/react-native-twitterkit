@@ -1,6 +1,6 @@
 
 import { NativeModules } from 'react-native';
 
-const { RNTwitterkit } = NativeModules;
+const { TweetView } = NativeModules;
 
-export default RNTwitterkit;
+export default TweetView;
