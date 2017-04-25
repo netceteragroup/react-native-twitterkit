@@ -290,8 +290,8 @@ alpha:1.0]
     [self createFrameInfoTimer];
     
     NSLog(@"\nreload tweet");
-    [self loadTweetWithID:@"846231685750439936"]; //REMOVE THIS
-    //[self loadTweetWithID:self.tweetIDString]; //ADD THIS
+    
+    [self loadTweetWithID:self.tweetIDString];
 }
 
 
