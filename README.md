@@ -1,5 +1,5 @@
-
-# react-native-twitterkit
+# React Native Twitter Kit
+[![License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat)](https://github.com/netceteragroup/react-native-twitterkit/blob/master/LICENSE)
 
 ## Getting started
 
