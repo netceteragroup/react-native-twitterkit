@@ -1,7 +1,7 @@
 'use strict';
-import { NativeModules } from 'react-native';
+import { requireNativeComponent } from 'react-native';
 
-const { TweetView } = NativeModules;
+const TweetView = requireNativeComponent('TweetView', null);
 
 export {
   TweetView
