@@ -22,8 +22,8 @@
 #### Android
 
 1. Open up `android/app/src/main/java/[...]/MainApplication.java`
-  - Add `import com.netcetera.reactnative.twitterkit.RNTwitterkitPackage;` to the imports at the top of the file
-  - Add `new RNTwitterkitPackage()` to the list returned by the `getPackages()` method
+  - Add `import com.netcetera.reactnative.twitterkit.RNTwitterKitPackage;` to the imports at the top of the file
+  - Add `new RNTwitterKitPackage()` to the list returned by the `getPackages()` method
 2. Append the following lines to `android/settings.gradle`:
   	```
   	include ':react-native-twitterkit'
