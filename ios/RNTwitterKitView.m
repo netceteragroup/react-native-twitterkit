@@ -246,15 +246,7 @@ alpha:1.0]
     if(self.linkTextColorFlagChanged){
         self.tweetView.linkTextColor = UIColorFromRGB([self.linkTextColor unsignedIntegerValue]);
     }
-    
-    if(self.tweetStyleFlagChanged){
-        if([[self.tweetStyle lowercaseString] isEqualToString:@"twtrtweetviewstyleregular"]){
-            self.tweetView.style = TWTRTweetViewStyleRegular;
-        } else {
-            self.tweetView.style = TWTRTweetViewStyleCompact;
-        }
-    }
-    
+        
     if(self.tweetThemeFlagChanged){
         if([[self.tweetTheme lowercaseString] isEqualToString:@"twtrtweetviewthemelight"])
         {
