@@ -11,6 +11,7 @@ import com.twitter.sdk.android.core.Result;
 import com.twitter.sdk.android.core.TwitterException;
 import com.twitter.sdk.android.core.models.Tweet;
 import com.twitter.sdk.android.tweetui.CustomTweetView;
+import com.twitter.sdk.android.tweetui.ToggleImageButton;
 import com.twitter.sdk.android.tweetui.TweetUtils;
 
 import java.util.Arrays;
@@ -18,14 +19,17 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-//fixed
-//1. added progress bar
-//2. it seems that 846231685750439936 default id is loaded from cache from time to time, investigate cache on twitter
+//import android.widget.LinearLayout;
+//import android.view.ViewGroup;
+//import android.widget.ImageButton;
+//import com.twitter.sdk.android.core.Session;
+//import com.twitter.sdk.android.core.SessionManager;
+//import com.twitter.sdk.android.core.TwitterCore;
+//import com.twitter.sdk.android.core.TwitterSession;
+//import com.twitter.sdk.android.tweetui.TweetActionBarView;
+
 //todo
-//0. decide about refresh and error
-//1. clean the code and use only one thread
-//2. make one log class to be able to show or not show logs
-//4. fix heart/like button
+//find a better solution for this exception
 //User authorization required
 //        com.twitter.sdk.android.core.TwitterAuthException: User authorization required
 //        at com.twitter.sdk.android.tweetui.TweetRepository.getUserSession(TweetRepository.java:149)
@@ -38,12 +42,11 @@ import java.util.TimerTask;
 //4. must have these states in react view
 //5. use relativelayout for better appeareance
 //6. use invisible not gone
-
 //there are 3 states
 //state_wait_for_property_tweetid
 //state_loading_from_server
 //state_wait_to_load_resources_before_showing
-public class TweetView extends RelativeLayout {
+class TweetView extends RelativeLayout {
 
     private static final String TAG = TweetView.class.getCanonicalName();
 
@@ -116,6 +119,7 @@ public class TweetView extends RelativeLayout {
                                        @Override
                                        public void run() {
                                            setTweetView();
+                                           hideLikeButton();
                                            //RNTwitterKitModule.sendToJs(getContext());
                                        }
                                    });
@@ -128,6 +132,11 @@ public class TweetView extends RelativeLayout {
 
     private Tweet globalTweet = null;
 
+    private void hideLikeButton(){
+        ToggleImageButton likeButton = (ToggleImageButton)findViewById(R.id.tw__tweet_like_button);
+        likeButton.setVisibility(View.GONE);
+    }
+
     private void setTweetAndRequestLayout(Tweet tweet) {
         globalTweet = tweet;
         LogUtils.d(TAG, "setTweetView, tweet.text = " + tweet.text + ", tweet.id = " + tweet.id);
@@ -135,15 +144,15 @@ public class TweetView extends RelativeLayout {
         requestLayoutWithDelay();
     }
 
-    private void findViews(){
+    private void findViews() {
         loadingContainer = (RelativeLayout) tweetMainContainer.findViewById(R.id.loading_container);
         reloadContainer = (RelativeLayout) findViewById(R.id.reload_container);
         errorContainer = (RelativeLayout) tweetMainContainer.findViewById(R.id.error_container);
         tweetView = (CustomTweetView) findViewById(R.id.tweet_view);
-        reloadButton = (ImageView)findViewById(R.id.reload_button);
+        reloadButton = (ImageView) findViewById(R.id.reload_button);
     }
 
-    private void setTweetView(){
+    private void setTweetView() {
         errorContainer.setVisibility(View.INVISIBLE);
         reloadContainer.setVisibility(View.INVISIBLE);
         loadingContainer.setVisibility(View.INVISIBLE);
@@ -159,7 +168,7 @@ public class TweetView extends RelativeLayout {
         loadingContainer.setVisibility(View.VISIBLE);
     }
 
-    private void setErrorView(){
+    private void setErrorView() {
         LogUtils.d(TAG, "setErrorView");
         reloadContainer.setVisibility(View.INVISIBLE);
         loadingContainer.setVisibility(View.INVISIBLE);
@@ -171,12 +180,12 @@ public class TweetView extends RelativeLayout {
 
     private void setErrorOrReloadView() {
         LogUtils.d(TAG, "setErrorOrReloadView");
-        if(errorCounter < 3){
+        if (errorCounter < 3) {
             setReloadView();
         } else {
             setErrorView();
         }
-        errorCounter ++;
+        errorCounter++;
     }
 
     private void setReloadView() {
@@ -208,7 +217,7 @@ public class TweetView extends RelativeLayout {
                     setTweetAndRequestLayout(tweet);
                     //LogUtils.debugJson(tweet);
                 }
-                if(selectedTweet == null){
+                if (selectedTweet == null) {
                     setReloadView();
                     //setErrorOrReloadView();
                 }
@@ -222,6 +231,34 @@ public class TweetView extends RelativeLayout {
             }
         });
     }
+
+//    private void findLikeButton() {
+//        ViewGroup firstRelativeLayoutContainer = (ViewGroup) getChildAt(0);
+//        CustomTweetView secondRelativeLayoutContainer = (CustomTweetView) firstRelativeLayoutContainer.getChildAt(0);
+//        LinearLayout buttonsLinearLayout = (LinearLayout) secondRelativeLayoutContainer.getChildAt(5);
+//        TweetActionBarView tweetActionBarView = (TweetActionBarView) buttonsLinearLayout.getChildAt(7);
+//        ToggleImageButton likeButton = (ToggleImageButton)tweetActionBarView.getChildAt(0);
+//        ToggleImageButton likeButton = (ToggleImageButton)findViewById(R.id.tw__tweet_like_button);
+//        likeButton.setOnClickListener(null);
+//        likeButton.setOnClickListener(new OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                TwitterCore twitterCore = TwitterCore.getInstance();
+//                if(twitterCore != null){
+//                    SessionManager sessionManager = twitterCore.getSessionManager();
+//                    if(sessionManager != null){
+//                        Session activeSession = sessionManager.getActiveSession();
+//                        if(activeSession != null){
+//                            android.util.Log.d(TAG, "like/unlike action");
+//                        } else {
+//                            android.util.Log.d(TAG, "like button clicked");
+//                        }
+//                    }
+//                }
+//
+//            }
+//        });
+//    }
 
     private long tweetId = 0L;
 
