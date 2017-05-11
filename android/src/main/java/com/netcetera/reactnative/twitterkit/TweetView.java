@@ -6,6 +6,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import com.facebook.react.bridge.ReactContext;
+import com.facebook.react.modules.core.DeviceEventManagerModule;
 import com.twitter.sdk.android.core.Callback;
 import com.twitter.sdk.android.core.Result;
 import com.twitter.sdk.android.core.TwitterException;
@@ -114,7 +116,7 @@ class TweetView extends RelativeLayout {
                                        }
                                    });
                                } else if (counter == 2) {
-                                   timer.cancel();
+                                   //timer.cancel();
                                    tweetMainContainer.post(new Runnable() {
                                        @Override
                                        public void run() {
@@ -123,6 +125,15 @@ class TweetView extends RelativeLayout {
                                            //RNTwitterKitModule.sendToJs(getContext());
                                        }
                                    });
+                               } else if (counter == 4) {
+                                   sendEventToJavaScript(maxHeight);
+                                   timer.cancel();
+//                                   tweetMainContainer.post(new Runnable() {
+//                                       @Override
+//                                       public void run() {
+//                                           sendEventToJavaScript(maxHeight);
+//                                       }
+//                                   });
                                }
                                counter++;
                            }
@@ -132,8 +143,14 @@ class TweetView extends RelativeLayout {
 
     private Tweet globalTweet = null;
 
-    private void hideLikeButton(){
-        ToggleImageButton likeButton = (ToggleImageButton)findViewById(R.id.tw__tweet_like_button);
+    private void sendEventToJavaScript(int height) {
+        android.util.Log.d(TAG,"sendEventToJavaScript, maxHeight = " + height);
+        ReactContext context = (ReactContext) getContext();
+        context.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit("testEvent", "320");//"" + height);
+    }
+
+    private void hideLikeButton() {
+        ToggleImageButton likeButton = (ToggleImageButton) findViewById(R.id.tw__tweet_like_button);
         likeButton.setVisibility(View.GONE);
     }
 
@@ -282,7 +299,12 @@ class TweetView extends RelativeLayout {
             measure(MeasureSpec.makeMeasureSpec(getWidth(), MeasureSpec.EXACTLY),
                     MeasureSpec.makeMeasureSpec(getHeight(), MeasureSpec.EXACTLY));
             layout(getLeft(), getTop(), getRight(), getBottom());
+            if (tweetView.getHeight() >= maxHeight) {
+                maxHeight = tweetView.getHeight();
+            }
         }
     };
+
+    int maxHeight = 0;
 
 }

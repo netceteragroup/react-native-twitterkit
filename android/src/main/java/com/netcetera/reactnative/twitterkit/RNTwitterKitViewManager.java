@@ -4,9 +4,11 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.facebook.drawee.controller.AbstractDraweeControllerBuilder;
+import com.facebook.react.uimanager.LayoutShadowNode;
 import com.facebook.react.uimanager.SimpleViewManager;
 import com.facebook.react.uimanager.ThemedReactContext;
 import com.facebook.react.uimanager.annotations.ReactProp;
+import com.facebook.react.views.text.ReactTextInlineImageShadowNode;
 import com.twitter.sdk.android.tweetui.TweetUiWrapper;
 
 public class RNTwitterKitViewManager extends SimpleViewManager<TweetView> {
@@ -55,4 +57,14 @@ public class RNTwitterKitViewManager extends SimpleViewManager<TweetView> {
         view.setTweetId(tweetId);
     }
 
+    @Override
+    public LayoutShadowNode createShadowNodeInstance() {
+        return new LayoutShadowNode();
+    }
+
+    @Override
+    public Class<LayoutShadowNode> getShadowNodeClass() {
+        return LayoutShadowNode.class;
+    }
+    //ReactTextInlineImageShado
 }
