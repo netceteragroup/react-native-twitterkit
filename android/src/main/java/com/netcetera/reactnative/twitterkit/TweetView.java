@@ -122,18 +122,21 @@ class TweetView extends RelativeLayout {
                                        public void run() {
                                            setTweetView();
                                            hideLikeButton();
-                                           //RNTwitterKitModule.sendToJs(getContext());
                                        }
                                    });
-                               } else if (counter == 4) {
-                                   sendEventToJavaScript(maxHeight);
+                               } else if (counter == 3) {
+                                   android.util.Log.d(TAG, "getHeight = " + tweetView.getHeight());
+                                   android.util.Log.d(TAG, "getWidth = " + tweetView.getWidth());
+                                   android.util.Log.d(TAG, "getMeasuredHeight = " + tweetView.getMeasuredHeight());
+                                   android.util.Log.d(TAG, "getMeasuredWidth = " + tweetView.getMeasuredWidth());
+                                   tweetMainContainer.post(new Runnable() {
+                                       @Override
+                                       public void run() {
+                                           tweetView.setVisibility(View.VISIBLE);
+                                           RNTwitterKitViewManager.layoutShadowNode.setStyleHeight(tweetView.getHeight());
+                                       }
+                                   });
                                    timer.cancel();
-//                                   tweetMainContainer.post(new Runnable() {
-//                                       @Override
-//                                       public void run() {
-//                                           sendEventToJavaScript(maxHeight);
-//                                       }
-//                                   });
                                }
                                counter++;
                            }
@@ -142,12 +145,6 @@ class TweetView extends RelativeLayout {
     }
 
     private Tweet globalTweet = null;
-
-    private void sendEventToJavaScript(int height) {
-        android.util.Log.d(TAG,"sendEventToJavaScript, maxHeight = " + height);
-        ReactContext context = (ReactContext) getContext();
-        context.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit("testEvent", "320");//"" + height);
-    }
 
     private void hideLikeButton() {
         ToggleImageButton likeButton = (ToggleImageButton) findViewById(R.id.tw__tweet_like_button);
@@ -173,8 +170,10 @@ class TweetView extends RelativeLayout {
         errorContainer.setVisibility(View.INVISIBLE);
         reloadContainer.setVisibility(View.INVISIBLE);
         loadingContainer.setVisibility(View.INVISIBLE);
-        tweetView.setVisibility(View.VISIBLE);
-        tweetView.requestLayout();
+        tweetView.setVisibility(View.INVISIBLE);
+        measure(MeasureSpec.makeMeasureSpec(getWidth(), MeasureSpec.EXACTLY),
+                    MeasureSpec.makeMeasureSpec(getHeight(), MeasureSpec.AT_MOST));
+            layout(getLeft(), getTop(), getRight(), getBottom());
     }
 
     private void setLoadingView() {
@@ -249,6 +248,37 @@ class TweetView extends RelativeLayout {
         });
     }
 
+    private long tweetId = 0L;
+
+    public void setTweetId(long tweetId) {
+        LogUtils.d(TAG, "setTweetId, tweetId = " + tweetId);
+        this.tweetId = tweetId;
+    }
+
+//    @Override
+//    public void requestLayout() {
+//        super.requestLayout();
+//        post(measureAndLayout);
+//    }
+//
+//    private final Runnable measureAndLayout = new Runnable() {
+//        @Override
+//        public void run() {
+//
+//            LogUtils.d(TAG, "width = " + getWidth() + ", height = " + getHeight() + ", left = " + getLeft() + ", top = " + getTop() + "right = " + getRight() + ", bottom = " + getBottom());
+//
+//            measure(MeasureSpec.makeMeasureSpec(getWidth(), MeasureSpec.EXACTLY),
+//                    MeasureSpec.makeMeasureSpec(getHeight(), MeasureSpec.AT_MOST));
+//            layout(getLeft(), getTop(), getRight(), getBottom());
+//            if (tweetView.getMeasuredHeight() >= maxHeight) {
+//                maxHeight = tweetView.getMeasuredHeight();
+//            }
+//        }
+//    };
+//
+//    int maxHeight = 0;
+
+}
 //    private void findLikeButton() {
 //        ViewGroup firstRelativeLayoutContainer = (ViewGroup) getChildAt(0);
 //        CustomTweetView secondRelativeLayoutContainer = (CustomTweetView) firstRelativeLayoutContainer.getChildAt(0);
@@ -276,35 +306,3 @@ class TweetView extends RelativeLayout {
 //            }
 //        });
 //    }
-
-    private long tweetId = 0L;
-
-    public void setTweetId(long tweetId) {
-        LogUtils.d(TAG, "setTweetId, tweetId = " + tweetId);
-        this.tweetId = tweetId;
-    }
-
-    @Override
-    public void requestLayout() {
-        super.requestLayout();
-        post(measureAndLayout);
-    }
-
-    private final Runnable measureAndLayout = new Runnable() {
-        @Override
-        public void run() {
-
-            LogUtils.d(TAG, "width = " + getWidth() + ", height = " + getHeight() + ", left = " + getLeft() + ", top = " + getTop() + "right = " + getRight() + ", bottom = " + getBottom());
-
-            measure(MeasureSpec.makeMeasureSpec(getWidth(), MeasureSpec.EXACTLY),
-                    MeasureSpec.makeMeasureSpec(getHeight(), MeasureSpec.EXACTLY));
-            layout(getLeft(), getTop(), getRight(), getBottom());
-            if (tweetView.getHeight() >= maxHeight) {
-                maxHeight = tweetView.getHeight();
-            }
-        }
-    };
-
-    int maxHeight = 0;
-
-}

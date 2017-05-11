@@ -4,6 +4,7 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.facebook.drawee.controller.AbstractDraweeControllerBuilder;
+import com.facebook.react.bridge.Dynamic;
 import com.facebook.react.uimanager.LayoutShadowNode;
 import com.facebook.react.uimanager.SimpleViewManager;
 import com.facebook.react.uimanager.ThemedReactContext;
@@ -43,13 +44,6 @@ public class RNTwitterKitViewManager extends SimpleViewManager<TweetView> {
         return "TweetView";
     }
 
-    @Override
-    public TweetView createViewInstance(ThemedReactContext context) {
-        TweetUiWrapper.init(context);
-        TweetView view = new TweetView(context, context.getCurrentActivity());
-        return view;
-    }
-
     @ReactProp(name = "tweetid")
     public void setTweetId(TweetView view, String strTweetId) {
         Log.d(TAG, "setTweetId");
@@ -58,8 +52,19 @@ public class RNTwitterKitViewManager extends SimpleViewManager<TweetView> {
     }
 
     @Override
+    public TweetView createViewInstance(ThemedReactContext context) {
+        TweetUiWrapper.init(context);
+        TweetView view = new TweetView(context, context.getCurrentActivity());
+        return view;
+    }
+
+    public static LayoutShadowNode layoutShadowNode;
+
+    @Override
     public LayoutShadowNode createShadowNodeInstance() {
-        return new LayoutShadowNode();
+        layoutShadowNode = new LayoutShadowNode();
+        layoutShadowNode.setStyleHeight(100);
+        return layoutShadowNode;
     }
 
     @Override

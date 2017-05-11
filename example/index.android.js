@@ -64,14 +64,12 @@ export default class example extends Component {
            Good Tweet 2
          </Text>
 		  <TweetView
-			style={{backgroundColor: 'white', height: height}}
-			tweetid={'510908133917487104'}/>
+			style={styles.twitter_that_works}
+			tweetid={'828627783119208449'}/>
       <TextInput
         onChangeText={(text) => this.setState({text})}
         value={this.state.text}
          />
-      <View style={{backgroundColor: 'red', height: height}}></View>
-
       <Text>Test</Text>
       </ScrollView>
     );
@@ -96,7 +94,7 @@ const styles = StyleSheet.create({
 	twitter_that_works: {
     flex: 0,
     width: screenWidth,
-  	height: 100,
+  	height: 325,
     backgroundColor: '#FFFFFF',
 	},
 	twitter_that_doesnot_work: {
