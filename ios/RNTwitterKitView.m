@@ -231,6 +231,9 @@ alpha:1.0]
 
 #pragma mark - Tweeter properties apply
 - (void) applyViewProperties {
+    // default values
+    self.tweetView.showActionButtons = YES;
+
     if(self.actionButtonsFlagChanged){
         self.tweetView.showActionButtons = self.showActionButtons;
     }
