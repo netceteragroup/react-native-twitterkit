@@ -27,13 +27,6 @@ public class TweetShadowNode extends LayoutShadowNode implements YogaMeasureFunc
         setMeasureFunction(this);
     }
 
-//    long measure(
-//            YogaNodeAPI node,
-//            float width,
-//            YogaMeasureMode widthMode,
-//            float height,
-//            YogaMeasureMode heightMode);
-
     @Override
     public long measure(
             YogaNodeAPI node,

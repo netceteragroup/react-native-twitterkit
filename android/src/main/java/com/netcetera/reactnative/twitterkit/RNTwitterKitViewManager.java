@@ -60,9 +60,10 @@ public class RNTwitterKitViewManager extends BaseViewManager<TweetView,TweetShad
         return view;
     }
 
-    //start 3 methods
+    //start TweetShadowNode methods
     @Override
     public void updateExtraData(TweetView view, Object extraData) {
+        view.requestLayout();
         view.invalidate();
 //        ReactTextUpdate update = (ReactTextUpdate) extraData;
 //        if (update.containsImages()) {
@@ -85,21 +86,6 @@ public class RNTwitterKitViewManager extends BaseViewManager<TweetView,TweetShad
     public Class<TweetShadowNode> getShadowNodeClass() {
         return TweetShadowNode.class;
     }
-
-    //end 3 methods
-//    public static LayoutShadowNode layoutShadowNode;
-//
-//    @Override
-//    public LayoutShadowNode createShadowNodeInstance() {
-//        layoutShadowNode = new LayoutShadowNode();
-//        layoutShadowNode.setStyleHeight(200);
-//        return layoutShadowNode;
-//    }
-//
-//    @Override
-//    public Class<LayoutShadowNode> getShadowNodeClass() {
-//        return LayoutShadowNode.class;
-//    }
 
     private static Object sTweetViewCtorLock = new Object();
 
