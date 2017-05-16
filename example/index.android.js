@@ -61,22 +61,23 @@ export default class example extends Component {
     return (
       <ScrollView style={styles.container}>
 	  	<Text style={styles.instructions}>
-           Good Tweet 2
+           Text Above Tweet
          </Text>
 		  <TweetView
-			style={styles.twitter_that_works}
+			style={styles.empty_syle}
 			tweetid={'828627783119208449'}/>
-      <TextInput
-        onChangeText={(text) => this.setState({text})}
-        value={this.state.text}
-         />
-      <Text>Test</Text>
+      <Text style={styles.instructions}>
+           Text Bellow Tweet
+         </Text>
       </ScrollView>
     );
   }
 }
 
 const styles = StyleSheet.create({
+  empty_style: {
+
+  },
   container: {
     flex: 1,
   },

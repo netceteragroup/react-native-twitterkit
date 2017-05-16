@@ -1,14 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Important notes
  1. Must have a long tweet as initializer, 846231685750439936 is good enough. -->
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:twittersdk="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:twittersdk="http://schemas.android.com/apk/res-auto">
 
     <com.twitter.sdk.android.tweetui.CustomTweetView
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
+        android:layout_centerInParent="true"
         android:visibility="invisible"
         android:id="@+id/tweet_view"
         android:layout_width="match_parent"
@@ -99,4 +96,4 @@
             android:textSize="16sp" />
 
     </RelativeLayout>
-</RelativeLayout>
+</merge>
