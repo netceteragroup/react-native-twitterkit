@@ -18,6 +18,14 @@ public class RNTwitterKitViewManager extends BaseViewManager<TweetView,TweetShad
 
     private static final String TAG = RNTwitterKitViewManager.class.getCanonicalName();
 
+    /* package */ static final String DEFAULT_STYLE = "Normal";
+
+    public static final String PROP_STYLE = "styleAttr";
+    /* package */ static final String PROP_INDETERMINATE = "indeterminate";
+    /* package */ static final String PROP_PROGRESS = "progress";
+    /* package */ static final String PROP_ANIMATING = "animating";
+
+
     private
     @Nullable
     AbstractDraweeControllerBuilder mDraweeControllerBuilder;
@@ -78,7 +86,7 @@ public class RNTwitterKitViewManager extends BaseViewManager<TweetView,TweetShad
     @Override
     public TweetShadowNode createShadowNodeInstance() {
         layoutShadowNode = new TweetShadowNode();
-        layoutShadowNode.setStyleHeight(300);
+        layoutShadowNode.setStyleHeight(100);
         return layoutShadowNode;
     }
 

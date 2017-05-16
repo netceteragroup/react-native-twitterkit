@@ -27,15 +27,60 @@ class TweetView extends RelativeLayout {
 
     private static final String TAG = TweetView.class.getCanonicalName();
 
-    private static final int MAIN_ID = 101;
-
     public TweetView(Context context, Activity activity) {
         super(context);
-        mLayoutInflater = activity.getLayoutInflater();
         LogUtils.d(TAG, "TweetView");
-        initTweetContent(activity);
+        mLayoutInflater = activity.getLayoutInflater();
+
+        debugRelativeLayout(activity);
+        //initTweetContent(activity);
+
         setId(R.id.debug_id);//not working
     }
+    private static final int MAIN_ID = 101;
+
+    private int debugHeight = 100;
+    private void debugRelativeLayout(final Activity activity) {
+
+        tweetMainContainer = this;
+        timer = new Timer();
+        timer.schedule(new TimerTask() {
+                           //@Override
+                           public void run() {
+                               //some delay to allow the tweet to fully load
+                               if (counter == 1) {
+                                   tweetMainContainer.post(new Runnable() {
+                                       @Override
+                                       public void run() {
+                                           tweetMainContainer.setBackgroundColor(activity.getResources().getColor(android.R.color.holo_blue_bright));
+                                           RNTwitterKitViewManager.layoutShadowNode.setStyleHeight(debugHeight * counter);
+                                       }
+                                   });
+                               } else if (counter == 2) {
+                                   //timer.cancel();
+                                   tweetMainContainer.post(new Runnable() {
+                                       @Override
+                                       public void run() {
+                                           tweetMainContainer.setBackgroundColor(activity.getResources().getColor(android.R.color.holo_blue_light));
+                                           RNTwitterKitViewManager.layoutShadowNode.setStyleHeight(debugHeight * counter);
+                                       }
+                                   });
+                               } else if (counter == 3) {
+                                   tweetMainContainer.post(new Runnable() {
+                                       @Override
+                                       public void run() {
+                                           tweetMainContainer.setBackgroundColor(activity.getResources().getColor(android.R.color.holo_blue_dark));
+                                           RNTwitterKitViewManager.layoutShadowNode.setStyleHeight(debugHeight * counter);
+                                       }
+                                   });
+                                   timer.cancel();
+                               }
+                               counter++;
+                           }
+                       }
+                , 0, 1000);//Update text every second
+    }
+
 
     private LayoutInflater mLayoutInflater;
 
@@ -153,7 +198,7 @@ class TweetView extends RelativeLayout {
         tweetView.setVisibility(View.INVISIBLE);
         removeAllViews();
         addView(tweetView);
-
+        //does not work without this measure lines
         final int spec = View.MeasureSpec.makeMeasureSpec(
                 tweetView.getHeight(),
                 View.MeasureSpec.UNSPECIFIED);
