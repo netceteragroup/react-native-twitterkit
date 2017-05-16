@@ -56,6 +56,8 @@ alpha:1.0]
 @property (nonatomic) BOOL backgroundColorFlagChanged;
 @property (nonatomic) NSNumber *tweetBackgroundColor;
 
+//tweeter height after loading tweet
+@property (nonatomic) NSNumber *tweetHeight;
 @end
 
 
@@ -63,6 +65,7 @@ alpha:1.0]
     NSString *strTweetID;
     UIActivityIndicatorView *activityIndicator;
     NSTimer *timer;
+    NSTimer *tweetHeightChangedTimer;
 }
 
 #pragma mark - init
@@ -185,6 +188,8 @@ alpha:1.0]
     [self applyViewProperties];
     
     self.tweetView.hidden = NO;
+    
+    self.tweetHeight = [NSNumber numberWithFloat:desiredSize.height];
 }
 
 //LOAD FAILS----
@@ -231,9 +236,9 @@ alpha:1.0]
 
 #pragma mark - Tweeter properties apply
 - (void) applyViewProperties {
-    // default values
+    //default values
     self.tweetView.showActionButtons = YES;
-
+    
     if(self.actionButtonsFlagChanged){
         self.tweetView.showActionButtons = self.showActionButtons;
     }
@@ -249,7 +254,15 @@ alpha:1.0]
     if(self.linkTextColorFlagChanged){
         self.tweetView.linkTextColor = UIColorFromRGB([self.linkTextColor unsignedIntegerValue]);
     }
-        
+    
+    if(self.tweetStyleFlagChanged){
+        if([[self.tweetStyle lowercaseString] isEqualToString:@"twtrtweetviewstyleregular"]){
+            self.tweetView.style = TWTRTweetViewStyleRegular;
+        } else {
+            self.tweetView.style = TWTRTweetViewStyleCompact;
+        }
+    }
+    
     if(self.tweetThemeFlagChanged){
         if([[self.tweetTheme lowercaseString] isEqualToString:@"twtrtweetviewthemelight"])
         {
@@ -263,6 +276,33 @@ alpha:1.0]
         self.tweetView.backgroundColor = UIColorFromRGB([self.tweetBackgroundColor unsignedIntegerValue]);
     }
     
+    tweetHeightChangedTimer = [NSTimer scheduledTimerWithTimeInterval:0.1f
+                                             target:self
+                                           selector:@selector(sendHeightChangeMethod:)
+                                           userInfo:nil
+                                            repeats:YES];
+    
+}
+
+
+-(void)sendHeightChangeMethod:(NSTimer*)timer {
+    //if height of the tweet view changes inform the shadowview to change layout
+    if([self.tweetHeight floatValue] > 0){
+        if([tweetHeightChangedTimer isValid]){
+            [tweetHeightChangedTimer invalidate];
+            
+            //create a dictionary which contains the tweet view reference and his new height
+            NSDictionary *dictWithTweetViewAndHisHeight = [NSDictionary dictionaryWithObjectsAndKeys:
+                                   self, @"tweeterView",
+                                   [NSNumber numberWithFloat:[self.tweetHeight floatValue]], @"tweetHeight",
+                                   nil];
+            
+            //notify the view manager that the tweet view height has changed and pass the necessary data to the view manager
+            [[NSNotificationCenter defaultCenter]
+             postNotificationName:@"HeightChangeNotification"
+             object:dictWithTweetViewAndHisHeight];
+        }
+    }
 }
 
 

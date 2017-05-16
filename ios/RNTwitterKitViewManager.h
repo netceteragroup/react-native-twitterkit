@@ -9,7 +9,10 @@
 #import <Foundation/Foundation.h>
 #import <React/RCTViewManager.h>
 #import "RNTwitterKitView.h"
+#import <React/RctshadowView.h>
 
 @interface RNTwitterKitViewManager : RCTViewManager
+
+@property (nonatomic, strong) RCTShadowView *sv;
 
 @end
