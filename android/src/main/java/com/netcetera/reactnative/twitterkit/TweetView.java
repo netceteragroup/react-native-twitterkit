@@ -14,6 +14,7 @@ import com.twitter.sdk.android.core.Callback;
 import com.twitter.sdk.android.core.Result;
 import com.twitter.sdk.android.core.TwitterException;
 import com.twitter.sdk.android.core.models.Tweet;
+import com.twitter.sdk.android.tweetui.CompactTweetView;
 import com.twitter.sdk.android.tweetui.CustomTweetView;
 import com.twitter.sdk.android.tweetui.ToggleImageButton;
 import com.twitter.sdk.android.tweetui.TweetUtils;
@@ -73,7 +74,7 @@ class TweetView extends RelativeLayout {
     private ImageView reloadButton;
     private RelativeLayout reloadContainer;
     private RelativeLayout errorContainer;
-    private CustomTweetView tweetView;
+    private CompactTweetView tweetView;
     private RelativeLayout loadingContainer;
 
     private int counter = 0;
@@ -140,9 +141,9 @@ class TweetView extends RelativeLayout {
         loadingContainer = (RelativeLayout) tweetMainContainer.findViewById(R.id.loading_container);
         reloadContainer = (RelativeLayout) findViewById(R.id.reload_container);
         errorContainer = (RelativeLayout) tweetMainContainer.findViewById(R.id.error_container);
-        tweetView = (CustomTweetView) findViewById(R.id.tweet_view);
+        tweetView = (CompactTweetView) findViewById(R.id.tweet_view);
         reloadButton = (ImageView) findViewById(R.id.reload_button);
-        tweetView = (CustomTweetView) mLayoutInflater.inflate(R.layout.direct_tweet, null);
+        //tweetView = (CustomTweetView) mLayoutInflater.inflate(R.layout.direct_tweet, null);
     }
 
     private void setTweetView() {
