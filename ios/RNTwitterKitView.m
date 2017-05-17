@@ -178,7 +178,12 @@ alpha:1.0]
 - (void)adjustViewsLayoutTweetLoadSuccess {
     //adjust twitter view
     CGSize desiredSize = [self.tweetView sizeThatFits:CGSizeMake(self.frame.size.width, CGFLOAT_MAX)];
-    NSLog(@"SIZE = %f   %f", desiredSize.width, desiredSize.height);
+    //NSLog(@"SIZE = %f   %f", desiredSize.width, desiredSize.height);
+    
+    if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"twitter://"]]) {
+        // Twitter app is installed
+        desiredSize.height += 30;
+    }
     
     //adjust self frame
     CGRect selfViewRect = CGRectMake(self.frame.origin.x, self.frame.origin.y, desiredSize.width, desiredSize.height);
@@ -274,6 +279,13 @@ alpha:1.0]
     
     if(self.backgroundColorFlagChanged){
         self.tweetView.backgroundColor = UIColorFromRGB([self.tweetBackgroundColor unsignedIntegerValue]);
+    }
+    
+    if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"twitter://"]]) {
+        // Twitter app is installed
+    } else {
+        // Twitter app is NOT installed
+        self.tweetView.showActionButtons = NO;
     }
     
     tweetHeightChangedTimer = [NSTimer scheduledTimerWithTimeInterval:0.1f
