@@ -2,14 +2,20 @@ package com.netcetera.reactnative.twitterkit;
 
 import android.app.Activity;
 import android.content.Context;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import com.facebook.react.bridge.ReactContext;
+import com.facebook.react.modules.core.DeviceEventManagerModule;
+import com.facebook.react.uimanager.UIManagerModule;
 import com.twitter.sdk.android.core.Callback;
 import com.twitter.sdk.android.core.Result;
 import com.twitter.sdk.android.core.TwitterException;
 import com.twitter.sdk.android.core.models.Tweet;
+import com.twitter.sdk.android.tweetui.CompactTweetView;
 import com.twitter.sdk.android.tweetui.CustomTweetView;
 import com.twitter.sdk.android.tweetui.ToggleImageButton;
 import com.twitter.sdk.android.tweetui.TweetUtils;
@@ -19,52 +25,29 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-//import android.widget.LinearLayout;
-//import android.view.ViewGroup;
-//import android.widget.ImageButton;
-//import com.twitter.sdk.android.core.Session;
-//import com.twitter.sdk.android.core.SessionManager;
-//import com.twitter.sdk.android.core.TwitterCore;
-//import com.twitter.sdk.android.core.TwitterSession;
-//import com.twitter.sdk.android.tweetui.TweetActionBarView;
-
-//todo
-//find a better solution for this exception
-//User authorization required
-//        com.twitter.sdk.android.core.TwitterAuthException: User authorization required
-//        at com.twitter.sdk.android.tweetui.TweetRepository.getUserSession(TweetRepository.java:149)
-//        at com.twitter.sdk.android.tweetui.TweetRepository.favorite(TweetRepository.java:107)
-//        at com.twitter.sdk.android.tweetui.LikeTweetAction.onClick(LikeTweetAction.java:65)
-//some important things
-//1. must use customtweetview instead of compacttweetview
-//2. must use xml for CompactTweetView, it seems it does not work if CustomTweetView is created from code
-//3. set own imageloader
-//4. must have these states in react view
-//5. use relativelayout for better appeareance
-//6. use invisible not gone
-//there are 3 states
-//state_wait_for_property_tweetid
-//state_loading_from_server
-//state_wait_to_load_resources_before_showing
 class TweetView extends RelativeLayout {
 
     private static final String TAG = TweetView.class.getCanonicalName();
 
+    private static final int MAIN_ID = 101;
+
     public TweetView(Context context, Activity activity) {
         super(context);
-        LogUtils.d(TAG, "RNTwitterKitView");
-        RelativeLayout.LayoutParams layoutParams = new LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-        setLayoutParams(layoutParams);
+        mLayoutInflater = activity.getLayoutInflater();
+        LogUtils.d(TAG, "TweetView");
         initTweetContent(activity);
+        //ReactContext reactContext = (ReactContext)context;
+        //reactContext.getCurrentActivity();
+        setId(R.id.debug_id);//not working
     }
+
+    private LayoutInflater mLayoutInflater;
 
     private void initTweetContent(Activity activity) {
         LogUtils.d(TAG, "initTweetContent");
-        //TweetUiWrapper.init(activity);
-        tweetMainContainer = (RelativeLayout) activity.getLayoutInflater().inflate(R.layout.tweet_container, null);
-        //LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);//ViewGroup.LayoutParams.WRAP_CONTENT);
-        //tweetMainContainer.setLayoutParams(layoutParams);
-        this.addView(tweetMainContainer);
+        mLayoutInflater.inflate(R.layout.tweet_container, this, true);
+        tweetMainContainer = this;
+        tweetMainContainer.setBackgroundColor(activity.getResources().getColor(android.R.color.black));
 
         findViews();
 
@@ -89,12 +72,12 @@ class TweetView extends RelativeLayout {
 
     private boolean isWaiting = true;
 
-    private RelativeLayout tweetMainContainer;
+    private View tweetMainContainer;
 
     private ImageView reloadButton;
     private RelativeLayout reloadContainer;
     private RelativeLayout errorContainer;
-    private CustomTweetView tweetView;
+    private CompactTweetView tweetView;
     private RelativeLayout loadingContainer;
 
     private int counter = 0;
@@ -110,19 +93,42 @@ class TweetView extends RelativeLayout {
                                    tweetMainContainer.post(new Runnable() {
                                        @Override
                                        public void run() {
+                                           android.util.Log.d(TAG, "tweetView.setTweet");
                                            tweetView.setTweet(globalTweet);
                                        }
                                    });
                                } else if (counter == 2) {
-                                   timer.cancel();
+                                   //timer.cancel();
                                    tweetMainContainer.post(new Runnable() {
                                        @Override
                                        public void run() {
                                            setTweetView();
                                            hideLikeButton();
-                                           //RNTwitterKitModule.sendToJs(getContext());
                                        }
                                    });
+                               } else if (counter == 3) {
+                                   tweetMainContainer.post(new Runnable() {
+                                       @Override
+                                       public void run() {
+                                           tweetView.setVisibility(View.VISIBLE);
+                                           //UIManagerModule start
+//                                           com.facebook.react.bridge.AssertionException: Expected to be called from the 'native_modules' thread!
+//                                                   at com.facebook.react.bridge.SoftAssertions.assertCondition(SoftAssertions.java:37)
+//                                           at com.facebook.react.bridge.queue.MessageQueueThreadImpl.assertIsOnThread(MessageQueueThreadImpl.java:99)
+//                                           at com.facebook.react.bridge.ReactContext.assertOnNativeModulesQueueThread(ReactContext.java:278)
+//                                           at com.facebook.react.uimanager.UIManagerModule.updateNodeSize(UIManagerModule.java:233)
+//                                           at com.netcetera.reactnative.twitterkit.TweetView$2$3.run(TweetView.java:115)
+                                           //ReactContext reactContext = ((ReactContext) getContext());
+                                           //reactContext.getNativeModule(UIManagerModule.class).updateNodeSize(getId(), 400, 400);
+                                           //UIManagerModule end
+                                           RNTwitterKitViewManager.layoutShadowNode.setStyleHeight(tweetView.getMeasuredHeight());
+                                           android.util.Log.d(TAG, "getHeight = " + tweetView.getHeight());
+                                           android.util.Log.d(TAG, "getWidth = " + tweetView.getWidth());
+                                           android.util.Log.d(TAG, "getMeasuredHeight = " + tweetView.getMeasuredHeight());
+                                           android.util.Log.d(TAG, "getMeasuredWidth = " + tweetView.getMeasuredWidth());
+                                       }
+                                   });
+                                   timer.cancel();
                                }
                                counter++;
                            }
@@ -132,8 +138,8 @@ class TweetView extends RelativeLayout {
 
     private Tweet globalTweet = null;
 
-    private void hideLikeButton(){
-        ToggleImageButton likeButton = (ToggleImageButton)findViewById(R.id.tw__tweet_like_button);
+    private void hideLikeButton() {
+        ToggleImageButton likeButton = (ToggleImageButton) findViewById(R.id.tw__tweet_like_button);
         likeButton.setVisibility(View.GONE);
     }
 
@@ -148,16 +154,26 @@ class TweetView extends RelativeLayout {
         loadingContainer = (RelativeLayout) tweetMainContainer.findViewById(R.id.loading_container);
         reloadContainer = (RelativeLayout) findViewById(R.id.reload_container);
         errorContainer = (RelativeLayout) tweetMainContainer.findViewById(R.id.error_container);
-        tweetView = (CustomTweetView) findViewById(R.id.tweet_view);
+        tweetView = (CompactTweetView) findViewById(R.id.tweet_view);
         reloadButton = (ImageView) findViewById(R.id.reload_button);
+        //tweetView = (CustomTweetView) mLayoutInflater.inflate(R.layout.direct_tweet, null);
     }
 
     private void setTweetView() {
         errorContainer.setVisibility(View.INVISIBLE);
         reloadContainer.setVisibility(View.INVISIBLE);
         loadingContainer.setVisibility(View.INVISIBLE);
-        tweetView.setVisibility(View.VISIBLE);
-        tweetView.requestLayout();
+
+        tweetView.setVisibility(View.INVISIBLE);
+        removeAllViews();
+        addView(tweetView);
+
+        final int spec = View.MeasureSpec.makeMeasureSpec(
+                tweetView.getHeight(),
+                View.MeasureSpec.UNSPECIFIED);
+        LogUtils.d(TAG, "spec = " + spec);
+        measure(getWidth(), spec);
+
     }
 
     private void setLoadingView() {
@@ -232,57 +248,11 @@ class TweetView extends RelativeLayout {
         });
     }
 
-//    private void findLikeButton() {
-//        ViewGroup firstRelativeLayoutContainer = (ViewGroup) getChildAt(0);
-//        CustomTweetView secondRelativeLayoutContainer = (CustomTweetView) firstRelativeLayoutContainer.getChildAt(0);
-//        LinearLayout buttonsLinearLayout = (LinearLayout) secondRelativeLayoutContainer.getChildAt(5);
-//        TweetActionBarView tweetActionBarView = (TweetActionBarView) buttonsLinearLayout.getChildAt(7);
-//        ToggleImageButton likeButton = (ToggleImageButton)tweetActionBarView.getChildAt(0);
-//        ToggleImageButton likeButton = (ToggleImageButton)findViewById(R.id.tw__tweet_like_button);
-//        likeButton.setOnClickListener(null);
-//        likeButton.setOnClickListener(new OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                TwitterCore twitterCore = TwitterCore.getInstance();
-//                if(twitterCore != null){
-//                    SessionManager sessionManager = twitterCore.getSessionManager();
-//                    if(sessionManager != null){
-//                        Session activeSession = sessionManager.getActiveSession();
-//                        if(activeSession != null){
-//                            android.util.Log.d(TAG, "like/unlike action");
-//                        } else {
-//                            android.util.Log.d(TAG, "like button clicked");
-//                        }
-//                    }
-//                }
-//
-//            }
-//        });
-//    }
-
     private long tweetId = 0L;
 
     public void setTweetId(long tweetId) {
         LogUtils.d(TAG, "setTweetId, tweetId = " + tweetId);
         this.tweetId = tweetId;
     }
-
-    @Override
-    public void requestLayout() {
-        super.requestLayout();
-        post(measureAndLayout);
-    }
-
-    private final Runnable measureAndLayout = new Runnable() {
-        @Override
-        public void run() {
-
-            LogUtils.d(TAG, "width = " + getWidth() + ", height = " + getHeight() + ", left = " + getLeft() + ", top = " + getTop() + "right = " + getRight() + ", bottom = " + getBottom());
-
-            measure(MeasureSpec.makeMeasureSpec(getWidth(), MeasureSpec.EXACTLY),
-                    MeasureSpec.makeMeasureSpec(getHeight(), MeasureSpec.EXACTLY));
-            layout(getLeft(), getTop(), getRight(), getBottom());
-        }
-    };
 
 }

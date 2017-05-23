@@ -22,7 +22,10 @@ import {
   StyleSheet,
   Text,
   View,
+  TextInput,
   Dimensions,
+  DeviceEventEmitter,
+  ScrollView
 } from 'react-native';
 
 import { TweetView } from './TwitterKit';
@@ -32,28 +35,59 @@ const screenHeight = 0.9*screenWidth
 
 export default class example extends Component {
 
+  constructor(props){
+    super(props);
+    this.state = {
+      text: '20'
+    }
+  }
+
+  componentWillMount() {
+    DeviceEventEmitter && DeviceEventEmitter.addListener('testEvent', (testText) => {
+      this.setState({
+        text: testText
+      });
+    });
+  }
+
+  testMethod = () => {
+    this.setState({
+      text: '50'
+    });
+  };
+
   render() {
+    const height = parseInt(this.state.text);
     return (
-      <View style={styles.container}>
+      <ScrollView style={styles.container}>
 	  	<Text style={styles.instructions}>
-           Good Tweet
+           Text Above Tweet
          </Text>
-		<TweetView
-			style={styles.twitter_that_works}
-			tweetid={'843865267008655360'}/>
-      </View>
+		  <TweetView
+			style={styles.empty_syle}
+			tweetid={'828627783119208449'}/>
+      <Text style={styles.instructions}>
+           Text Bellow Tweet
+         </Text>
+      </ScrollView>
     );
   }
 }
 
 const styles = StyleSheet.create({
-	container: {
+  empty_style: {
+
+  },
+  container: {
+    flex: 0,
+  },
+	/*container: {
 		flex: 1,
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
 		backgroundColor: '#EEEEEE',
-	},
+	},*/
 	instructions: {
 		textAlign: 'center',
 		color: '#000000',
@@ -61,13 +95,13 @@ const styles = StyleSheet.create({
 	twitter_that_works: {
     flex: 0,
     width: screenWidth,
-  	height: screenHeight,
+  	height: 325,
     backgroundColor: '#FFFFFF',
 	},
 	twitter_that_doesnot_work: {
-	  flex: 0,
+	  flex: 1,
       width: 400,
-      height: 300,
+      height: 100,
 	},
 });
 

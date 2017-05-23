@@ -34,7 +34,6 @@ public class RNTwitterKitPackage implements ReactPackage {
                 .build();
 
         Fabric.with(fabric);
-
     }
 
     @Override
