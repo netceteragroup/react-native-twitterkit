@@ -15,7 +15,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Created by arnia on 16/05/2017.
+ * Inspired from ProgressBarShadowNode
  */
 
 public class TweetShadowNode extends LayoutShadowNode implements YogaMeasureFunction {

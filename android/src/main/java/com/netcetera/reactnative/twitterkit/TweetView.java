@@ -10,6 +10,7 @@ import android.widget.RelativeLayout;
 
 import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
+import com.facebook.react.uimanager.UIManagerModule;
 import com.twitter.sdk.android.core.Callback;
 import com.twitter.sdk.android.core.Result;
 import com.twitter.sdk.android.core.TwitterException;
@@ -35,6 +36,8 @@ class TweetView extends RelativeLayout {
         mLayoutInflater = activity.getLayoutInflater();
         LogUtils.d(TAG, "TweetView");
         initTweetContent(activity);
+        //ReactContext reactContext = (ReactContext)context;
+        //reactContext.getCurrentActivity();
         setId(R.id.debug_id);//not working
     }
 
@@ -108,6 +111,16 @@ class TweetView extends RelativeLayout {
                                        @Override
                                        public void run() {
                                            tweetView.setVisibility(View.VISIBLE);
+                                           //UIManagerModule start
+//                                           com.facebook.react.bridge.AssertionException: Expected to be called from the 'native_modules' thread!
+//                                                   at com.facebook.react.bridge.SoftAssertions.assertCondition(SoftAssertions.java:37)
+//                                           at com.facebook.react.bridge.queue.MessageQueueThreadImpl.assertIsOnThread(MessageQueueThreadImpl.java:99)
+//                                           at com.facebook.react.bridge.ReactContext.assertOnNativeModulesQueueThread(ReactContext.java:278)
+//                                           at com.facebook.react.uimanager.UIManagerModule.updateNodeSize(UIManagerModule.java:233)
+//                                           at com.netcetera.reactnative.twitterkit.TweetView$2$3.run(TweetView.java:115)
+                                           //ReactContext reactContext = ((ReactContext) getContext());
+                                           //reactContext.getNativeModule(UIManagerModule.class).updateNodeSize(getId(), 400, 400);
+                                           //UIManagerModule end
                                            RNTwitterKitViewManager.layoutShadowNode.setStyleHeight(tweetView.getMeasuredHeight());
                                            android.util.Log.d(TAG, "getHeight = " + tweetView.getHeight());
                                            android.util.Log.d(TAG, "getWidth = " + tweetView.getWidth());
