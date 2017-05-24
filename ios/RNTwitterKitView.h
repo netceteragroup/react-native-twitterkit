@@ -26,4 +26,5 @@
 @interface RNTwitterKitView : RCTView<TWTRTweetViewDelegate>
 
 @property(nonatomic, weak) id<RNTwitterKitViewDelegate> delegate;
+@property (nonatomic, strong) TWTRAPIClient *twitterAPIClient;
 @end

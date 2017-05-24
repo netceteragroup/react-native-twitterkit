@@ -21,7 +21,6 @@ alpha:1.0]
 @property (nonatomic, strong) NSString *tweetIDString;
 
 //views
-@property (nonatomic, strong) TWTRAPIClient *twitterAPIClient;
 @property (nonatomic, strong) TWTRTweetView *tweetView;
 @property (nonatomic) BOOL twitterDidLoadWithSuccess;
 @property (nonatomic) BOOL twitterDidFailWithError;
@@ -142,7 +141,7 @@ alpha:1.0]
 /////////////////////// VIEW LAYOUT /////////////
 - (void)setupViews
 {
-    [self createTwitterClientAndTwitterView];
+    [self createTwitterView];
     [self createActivityIndicator];
     [self createFrameInfoTimer];
     
@@ -362,9 +361,8 @@ alpha:1.0]
 
 #pragma mark - Tweetter object
 ///////////////// TWEETER OBJECT //////////////////
-- (void) createTwitterClientAndTwitterView
+- (void) createTwitterView
 {
-    self.twitterAPIClient = [[TWTRAPIClient alloc] init];
     
     self.tweetView = [[TWTRTweetView alloc] init];
     self.tweetView.frame = self.frame;

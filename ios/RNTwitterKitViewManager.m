@@ -8,11 +8,14 @@
 
 #import "RNTwitterKitViewManager.h"
 #import "RNTwitterKitView.h"
-#import <React/RctshadowView.h>
-#import <React/RctUIManager.h>
+#import <React/RCTShadowView.h>
+#import <React/RCTUIManager.h>
+#import <TwitterKit/TwitterKit.h>
 
 
-@implementation RNTwitterKitViewManager
+@implementation RNTwitterKitViewManager {
+    TWTRAPIClient *client;
+}
 
 RCT_EXPORT_MODULE(TweetView);
 RCT_REMAP_VIEW_PROPERTY(tweetid, TWEETID, NSString);
@@ -29,7 +32,11 @@ RCT_REMAP_VIEW_PROPERTY(backgroundColor, BACKGROUNDCOLOR, NSNumber);
 - (UIView *)view
 {
     [self createHeightChangeNotification];
-    return [[RNTwitterKitView alloc] init];
+    RNTwitterKitView *view = [[RNTwitterKitView alloc] init];
+    view.delegate = self;
+    view.twitterAPIClient = [self twitterAPIClient];
+    
+    return view;
 }
 
 
@@ -68,5 +75,14 @@ RCT_REMAP_VIEW_PROPERTY(backgroundColor, BACKGROUNDCOLOR, NSNumber);
     }
 }
 
+- (TWTRAPIClient *)twitterAPIClient
+{
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        self->client = [[TWTRAPIClient alloc] init];
+    });
+    
+    return self->client;
+}
 
 @end

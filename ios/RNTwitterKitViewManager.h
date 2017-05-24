@@ -12,7 +12,6 @@
 #import <React/RctshadowView.h>
 
 // TODO:
-// - move Twitter api client to manager
 // - move tweet view delegate methods here
 // - remove timer-based check on layout change
 // - specify load error message via props
