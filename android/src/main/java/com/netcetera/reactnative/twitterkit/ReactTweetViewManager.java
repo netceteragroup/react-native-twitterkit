@@ -8,13 +8,15 @@ import com.facebook.react.uimanager.BaseViewManager;
 import com.facebook.react.uimanager.ThemedReactContext;
 import com.facebook.react.uimanager.UIManagerModule;
 import com.facebook.react.uimanager.annotations.ReactProp;
+import com.twitter.sdk.android.tweetui.ImageLoaderFix;
 
 /**
- * Design notes:
+ * Design notes regargind auto-resize of the tweet:
  *
  * - setTweetId call on the manager results into a loadTweet method call in TweetView
  * - loadTweet method command's results (Tweet) loaded
- * - as soon as that happens,
+ * - as soon as that happens, a onSizeChanged event gets posted to the manager
+ * - the manager applies the new size via the UIManager
  * - shadow node re-calculates the layout and passes on the loaded Tweet to the actual tweet, along with the measured layout
  *
  */
@@ -40,6 +42,7 @@ public class ReactTweetViewManager
 
   @Override
   public TweetView createViewInstance(ThemedReactContext context) {
+    ImageLoaderFix.apply(context);
     TweetView tweetView = createTweetView(context);
     tweetView.addSizeChangeListener(this);
 
