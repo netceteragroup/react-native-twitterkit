@@ -1,8 +1,11 @@
 package com.netcetera.reactnative.twitterkit;
 
-import android.app.Activity;
 import android.content.Context;
+import android.support.annotation.NonNull;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
@@ -10,279 +13,209 @@ import com.twitter.sdk.android.core.Callback;
 import com.twitter.sdk.android.core.Result;
 import com.twitter.sdk.android.core.TwitterException;
 import com.twitter.sdk.android.core.models.Tweet;
-import com.twitter.sdk.android.tweetui.CustomTweetView;
+import com.twitter.sdk.android.tweetui.CompactTweetView;
 import com.twitter.sdk.android.tweetui.ToggleImageButton;
 import com.twitter.sdk.android.tweetui.TweetUtils;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.ArrayList;
 
-//import android.widget.LinearLayout;
-//import android.view.ViewGroup;
-//import android.widget.ImageButton;
-//import com.twitter.sdk.android.core.Session;
-//import com.twitter.sdk.android.core.SessionManager;
-//import com.twitter.sdk.android.core.TwitterCore;
-//import com.twitter.sdk.android.core.TwitterSession;
-//import com.twitter.sdk.android.tweetui.TweetActionBarView;
-
-//todo
-//find a better solution for this exception
-//User authorization required
-//        com.twitter.sdk.android.core.TwitterAuthException: User authorization required
-//        at com.twitter.sdk.android.tweetui.TweetRepository.getUserSession(TweetRepository.java:149)
-//        at com.twitter.sdk.android.tweetui.TweetRepository.favorite(TweetRepository.java:107)
-//        at com.twitter.sdk.android.tweetui.LikeTweetAction.onClick(LikeTweetAction.java:65)
-//some important things
-//1. must use customtweetview instead of compacttweetview
-//2. must use xml for CompactTweetView, it seems it does not work if CustomTweetView is created from code
-//3. set own imageloader
-//4. must have these states in react view
-//5. use relativelayout for better appeareance
-//6. use invisible not gone
-//there are 3 states
-//state_wait_for_property_tweetid
-//state_loading_from_server
-//state_wait_to_load_resources_before_showing
 class TweetView extends RelativeLayout {
 
-    private static final String TAG = TweetView.class.getCanonicalName();
+  public interface SizeChangeListener {
+    void onSizeChanged(TweetView view, int width, int height);
+  }
 
-    public TweetView(Context context, Activity activity) {
-        super(context);
-        LogUtils.d(TAG, "RNTwitterKitView");
-        RelativeLayout.LayoutParams layoutParams = new LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-        setLayoutParams(layoutParams);
-        initTweetContent(activity);
+  private static final String TAG = TweetView.class.getCanonicalName();
+
+  private View tweetMainContainer;
+
+  private ImageView reloadButton;
+  private RelativeLayout reloadContainer;
+  private RelativeLayout errorContainer;
+  private CompactTweetView tweetView;
+  private RelativeLayout loadingContainer;
+  private int reactTag;
+
+
+  private Tweet tweet = null;
+  private long tweetId = Long.MIN_VALUE;
+
+  private ArrayList<SizeChangeListener> sizeChangeListeners = new ArrayList<>();
+
+  public TweetView(Context context) {
+    super(context);
+    LogUtils.d(TAG, "TweetView");
+    initTweetContent();
+    setId(R.id.debug_id);//not working
+  }
+
+  private void initTweetContent() {
+    LogUtils.d(TAG, "initTweetContent");
+    LayoutInflater.from(getContext()).inflate(R.layout.tweet_container, this, true);
+    tweetMainContainer = this;
+
+    findViews();
+    setLoadingView();
+  }
+
+  public void setTweet(Tweet tweet) {
+    this.tweet = tweet;
+    if (tweet != null) {
+      setTweetIdInternally(tweet.getId());
     }
 
-    private void initTweetContent(Activity activity) {
-        LogUtils.d(TAG, "initTweetContent");
-        //TweetUiWrapper.init(activity);
-        tweetMainContainer = (RelativeLayout) activity.getLayoutInflater().inflate(R.layout.tweet_container, null);
-        //LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);//ViewGroup.LayoutParams.WRAP_CONTENT);
-        //tweetMainContainer.setLayoutParams(layoutParams);
-        this.addView(tweetMainContainer);
+    boolean laidOut = tweetView.isLaidOut();
 
-        findViews();
+    tweetView.setTweet(tweet);
+    initializeTweetView();
 
-        setLoadingView();
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while (isWaiting) {
-                    if (tweetId > 0) {
-                        isWaiting = false;
-                        loadTweet();
-                    }
-                    try {
-                        Thread.sleep(100);
-                    } catch (Exception e) {
-                    }
-                }
-            }
-        }).start();
-    }
-
-    private boolean isWaiting = true;
-
-    private RelativeLayout tweetMainContainer;
-
-    private ImageView reloadButton;
-    private RelativeLayout reloadContainer;
-    private RelativeLayout errorContainer;
-    private CustomTweetView tweetView;
-    private RelativeLayout loadingContainer;
-
-    private int counter = 0;
-    private Timer timer;
-
-    private void requestLayoutWithDelay() {
-        timer = new Timer();
-        timer.schedule(new TimerTask() {
-                           //@Override
-                           public void run() {
-                               //some delay to allow the tweet to fully load
-                               if (counter == 1) {
-                                   tweetMainContainer.post(new Runnable() {
-                                       @Override
-                                       public void run() {
-                                           tweetView.setTweet(globalTweet);
-                                       }
-                                   });
-                               } else if (counter == 2) {
-                                   timer.cancel();
-                                   tweetMainContainer.post(new Runnable() {
-                                       @Override
-                                       public void run() {
-                                           setTweetView();
-                                           hideLikeButton();
-                                           //RNTwitterKitModule.sendToJs(getContext());
-                                       }
-                                   });
-                               }
-                               counter++;
-                           }
-                       }
-                , 0, 1000);//Update text every second
-    }
-
-    private Tweet globalTweet = null;
-
-    private void hideLikeButton(){
-        ToggleImageButton likeButton = (ToggleImageButton)findViewById(R.id.tw__tweet_like_button);
-        likeButton.setVisibility(View.GONE);
-    }
-
-    private void setTweetAndRequestLayout(Tweet tweet) {
-        globalTweet = tweet;
-        LogUtils.d(TAG, "setTweetView, tweet.text = " + tweet.text + ", tweet.id = " + tweet.id);
-        tweetView.setTweet(null);
-        requestLayoutWithDelay();
-    }
-
-    private void findViews() {
-        loadingContainer = (RelativeLayout) tweetMainContainer.findViewById(R.id.loading_container);
-        reloadContainer = (RelativeLayout) findViewById(R.id.reload_container);
-        errorContainer = (RelativeLayout) tweetMainContainer.findViewById(R.id.error_container);
-        tweetView = (CustomTweetView) findViewById(R.id.tweet_view);
-        reloadButton = (ImageView) findViewById(R.id.reload_button);
-    }
-
-    private void setTweetView() {
-        errorContainer.setVisibility(View.INVISIBLE);
-        reloadContainer.setVisibility(View.INVISIBLE);
-        loadingContainer.setVisibility(View.INVISIBLE);
-        tweetView.setVisibility(View.VISIBLE);
-        tweetView.requestLayout();
-    }
-
-    private void setLoadingView() {
-        LogUtils.d(TAG, "setLoadingView");
-        errorContainer.setVisibility(View.INVISIBLE);
-        reloadContainer.setVisibility(View.INVISIBLE);
-        tweetView.setVisibility(View.INVISIBLE);
-        loadingContainer.setVisibility(View.VISIBLE);
-    }
-
-    private void setErrorView() {
-        LogUtils.d(TAG, "setErrorView");
-        reloadContainer.setVisibility(View.INVISIBLE);
-        loadingContainer.setVisibility(View.INVISIBLE);
-        tweetView.setVisibility(View.INVISIBLE);
-        errorContainer.setVisibility(View.VISIBLE);
-    }
-
-    private int errorCounter = 0;
-
-    private void setErrorOrReloadView() {
-        LogUtils.d(TAG, "setErrorOrReloadView");
-        if (errorCounter < 3) {
-            setReloadView();
-        } else {
-            setErrorView();
-        }
-        errorCounter++;
-    }
-
-    private void setReloadView() {
-        LogUtils.d(TAG, "setReloadView");
-        loadingContainer.setVisibility(View.INVISIBLE);
-        tweetView.setVisibility(View.INVISIBLE);
-        errorContainer.setVisibility(View.INVISIBLE);
-        reloadContainer.setVisibility(View.VISIBLE);
-        reloadButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setLoadingView();
-                loadTweet();
-            }
-        });
-    }
-
-    private void loadTweet() {
-        LogUtils.d(TAG, "loadTweet, tweetId = " + tweetId);
-        final List<Long> tweetIds = Arrays.asList(tweetId);//);
-        TweetUtils.loadTweets(tweetIds, new Callback<List<Tweet>>() {
-            @Override
-            public void success(Result<List<Tweet>> result) {
-                LogUtils.d(TAG, "loadTweet, success");
-                Tweet selectedTweet = null;
-                for (Tweet tweet : result.data) {
-                    LogUtils.d(TAG, "loadTweet, success, tweet.text = " + tweet.text);
-                    selectedTweet = tweet;
-                    setTweetAndRequestLayout(tweet);
-                    //LogUtils.debugJson(tweet);
-                }
-                if (selectedTweet == null) {
-                    setReloadView();
-                    //setErrorOrReloadView();
-                }
-            }
-
-            @Override
-            public void failure(TwitterException exception) {
-                LogUtils.d(TAG, "loadTweet, failure");
-                setReloadView();
-                //setErrorOrReloadView();
-            }
-        });
-    }
-
-//    private void findLikeButton() {
-//        ViewGroup firstRelativeLayoutContainer = (ViewGroup) getChildAt(0);
-//        CustomTweetView secondRelativeLayoutContainer = (CustomTweetView) firstRelativeLayoutContainer.getChildAt(0);
-//        LinearLayout buttonsLinearLayout = (LinearLayout) secondRelativeLayoutContainer.getChildAt(5);
-//        TweetActionBarView tweetActionBarView = (TweetActionBarView) buttonsLinearLayout.getChildAt(7);
-//        ToggleImageButton likeButton = (ToggleImageButton)tweetActionBarView.getChildAt(0);
-//        ToggleImageButton likeButton = (ToggleImageButton)findViewById(R.id.tw__tweet_like_button);
-//        likeButton.setOnClickListener(null);
-//        likeButton.setOnClickListener(new OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                TwitterCore twitterCore = TwitterCore.getInstance();
-//                if(twitterCore != null){
-//                    SessionManager sessionManager = twitterCore.getSessionManager();
-//                    if(sessionManager != null){
-//                        Session activeSession = sessionManager.getActiveSession();
-//                        if(activeSession != null){
-//                            android.util.Log.d(TAG, "like/unlike action");
-//                        } else {
-//                            android.util.Log.d(TAG, "like button clicked");
-//                        }
-//                    }
-//                }
-//
-//            }
-//        });
-//    }
-
-    private long tweetId = 0L;
-
-    public void setTweetId(long tweetId) {
-        LogUtils.d(TAG, "setTweetId, tweetId = " + tweetId);
-        this.tweetId = tweetId;
-    }
-
-    @Override
-    public void requestLayout() {
-        super.requestLayout();
-        post(measureAndLayout);
-    }
-
-    private final Runnable measureAndLayout = new Runnable() {
+    if (laidOut) {
+      updateSize();
+    } else {
+      post(new Runnable() {
         @Override
         public void run() {
-
-            LogUtils.d(TAG, "width = " + getWidth() + ", height = " + getHeight() + ", left = " + getLeft() + ", top = " + getTop() + "right = " + getRight() + ", bottom = " + getBottom());
-
-            measure(MeasureSpec.makeMeasureSpec(getWidth(), MeasureSpec.EXACTLY),
-                    MeasureSpec.makeMeasureSpec(getHeight(), MeasureSpec.EXACTLY));
-            layout(getLeft(), getTop(), getRight(), getBottom());
+          updateSize();
         }
-    };
+      });
+    }
+
+  }
+
+  private void updateSize() {
+    LogUtils.d(TAG, "updateSize");
+
+    measureTweet();
+    requestLayout();
+    fireSizeChange(tweetView.getWidth(), tweetView.getMeasuredHeight());
+  }
+
+  public void setTweetId(long tweetId) {
+    // triggers a load
+    LogUtils.d(TAG, "setTweetId, tweetId = " + tweetId);
+    if (tweetId != this.tweetId) {
+      setTweetIdInternally(tweetId);
+      loadTweet();
+    }
+  }
+
+  public void addSizeChangeListener(@NonNull SizeChangeListener l) {
+    sizeChangeListeners.add(l);
+  }
+
+  public void removeSizeChangeListener(@NonNull SizeChangeListener l) {
+    sizeChangeListeners.remove(l);
+  }
+
+  protected void fireSizeChange(int width, int height) {
+    for (SizeChangeListener l : sizeChangeListeners) {
+      l.onSizeChanged(this, width, height);
+    }
+  }
+
+  public int getReactTag() {
+    return reactTag;
+  }
+
+  public void setReactTag(int reactTag) {
+    this.reactTag = reactTag;
+  }
+
+  private void setTweetIdInternally(long tweetId) {
+    this.tweetId = tweetId;
+  }
+
+
+  private void hideLikeButton() {
+    ToggleImageButton likeButton = (ToggleImageButton) findViewById(R.id.tw__tweet_like_button);
+    likeButton.setVisibility(View.GONE);
+  }
+
+
+  private void findViews() {
+    loadingContainer = (RelativeLayout) tweetMainContainer.findViewById(R.id.loading_container);
+    reloadContainer = (RelativeLayout) findViewById(R.id.reload_container);
+    errorContainer = (RelativeLayout) tweetMainContainer.findViewById(R.id.error_container);
+    tweetView = (CompactTweetView) findViewById(R.id.tweet_view);
+    reloadButton = (ImageView) findViewById(R.id.reload_button);
+  }
+
+  private void initializeTweetView() {
+    errorContainer.setVisibility(View.INVISIBLE);
+    reloadContainer.setVisibility(View.INVISIBLE);
+    loadingContainer.setVisibility(View.INVISIBLE);
+
+    tweetView.setVisibility(View.VISIBLE);
+  }
+
+  private void measureTweet() {
+
+    int w = View.MeasureSpec.makeMeasureSpec(tweetView.getWidth(), MeasureSpec.EXACTLY);
+    int h = View.MeasureSpec.makeMeasureSpec(ViewGroup.LayoutParams.WRAP_CONTENT, MeasureSpec.UNSPECIFIED);
+
+    tweetView.measure(w, h);
+  }
+
+  private void setLoadingView() {
+    LogUtils.d(TAG, "setLoadingView");
+    errorContainer.setVisibility(View.INVISIBLE);
+    reloadContainer.setVisibility(View.INVISIBLE);
+    tweetView.setVisibility(View.INVISIBLE);
+    loadingContainer.setVisibility(View.VISIBLE);
+  }
+
+  private void setErrorView() {
+    LogUtils.d(TAG, "setErrorView");
+    reloadContainer.setVisibility(View.INVISIBLE);
+    loadingContainer.setVisibility(View.INVISIBLE);
+    tweetView.setVisibility(View.INVISIBLE);
+    errorContainer.setVisibility(View.VISIBLE);
+  }
+
+  private int errorCounter = 0;
+
+  private void setErrorOrReloadView() {
+    LogUtils.d(TAG, "setErrorOrReloadView");
+    if (errorCounter < 3) {
+      setReloadView();
+    } else {
+      setErrorView();
+    }
+    errorCounter++;
+  }
+
+  private void setReloadView() {
+    LogUtils.d(TAG, "setReloadView");
+    loadingContainer.setVisibility(View.INVISIBLE);
+    tweetView.setVisibility(View.INVISIBLE);
+    errorContainer.setVisibility(View.INVISIBLE);
+    reloadContainer.setVisibility(View.VISIBLE);
+    reloadButton.setOnClickListener(new OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        setLoadingView();
+        loadTweet();
+      }
+    });
+  }
+
+  private void loadTweet() {
+    LogUtils.d(TAG, "loadTweet, tweetId = " + tweetId);
+
+    TweetUtils.loadTweet(tweetId, new Callback<Tweet>() {
+      @Override
+      public void success(Result<Tweet> result) {
+        LogUtils.d(TAG, "loadTweet, success");
+        Tweet selectedTweet = result.data;
+        setTweet(selectedTweet);
+      }
+
+      @Override
+      public void failure(TwitterException exception) {
+        LogUtils.d(TAG, "loadTweet, failure");
+        setReloadView();
+      }
+    });
+  }
 
 }
