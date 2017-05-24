@@ -48,9 +48,9 @@ RCT_REMAP_VIEW_PROPERTY(backgroundColor, BACKGROUNDCOLOR, NSNumber);
 }
 
 
-- (void) receiveHeightChangeNotification:(NSNotification *) notification
+- (void)receiveHeightChangeNotification:(NSNotification *)notification
 {
-    if ([[notification name] isEqualToString:@"HeightChangeNotification"]){
+    if ([[notification name] isEqualToString:@"HeightChangeNotification"]) {
         
         //getting the new height of tweet
         float tweetHeight = [[notification.object objectForKey:@"tweetHeight"] floatValue];

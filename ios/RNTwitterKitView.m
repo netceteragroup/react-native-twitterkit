@@ -81,50 +81,58 @@ alpha:1.0]
 #pragma mark - JS properties setter methods
 ///////////////// RN PROPERTIES //////////////
 //tweetID
-- (void)setTWEETID:(NSString *)tweetID {
+- (void)setTWEETID:(NSString *)tweetID
+{
     NSLog(@"tweetID = %@\n", tweetID);
     self.tweetIDString = [[NSString alloc] initWithString:tweetID];
     [self loadTweetWithID:self.tweetIDString];
 }
 
 //actionButtons
-- (void)setSHOWACTIONBUTTONS:(BOOL)showActionButtons{
+- (void)setSHOWACTIONBUTTONS:(BOOL)showActionButtons
+{
     self.actionButtonsFlagChanged = YES;
     self.showActionButtons = showActionButtons;
 }
 
 //showBorder
--(void)setSHOWBORDER:(BOOL)showBorder {
+- (void)setSHOWBORDER:(BOOL)showBorder
+{
     self.showBorderFlagChanged = YES;
     self.showBorder = showBorder;
 }
 
 //primaryTextColor
--(void)setPRIMARYTEXTCOLOR:(NSNumber *)primaryTextColor {
+- (void)setPRIMARYTEXTCOLOR:(NSNumber *)primaryTextColor
+{
     self.primaryTextColorFlagChanged = YES;
     self.primaryTextColor = primaryTextColor;
 }
 
 //linkTextColor
-- (void)setLINKTEXTCOLOR:(NSNumber *)linkTextColor {
+- (void)setLINKTEXTCOLOR:(NSNumber *)linkTextColor
+{
     self.linkTextColorFlagChanged = YES;
     self.linkTextColor = linkTextColor;
 }
 
 //tweetStyle
-- (void)setTWEETSTYLE:(NSString *)tweetStyle {
+- (void)setTWEETSTYLE:(NSString *)tweetStyle
+{
     self.tweetStyleFlagChanged = YES;
     self.tweetStyle = tweetStyle;
 }
 
 //tweetTheme
-- (void)setTWEETTHEME:(NSString *)tweetTheme {
+- (void)setTWEETTHEME:(NSString *)tweetTheme
+{
     self.tweetThemeFlagChanged = YES;
     self.tweetTheme = tweetTheme;
 }
 
 //background color
-- (void)setBACKGROUNDCOLOR:(NSNumber *)backgroundColor {
+- (void)setBACKGROUNDCOLOR:(NSNumber *)backgroundColor
+{
     self.backgroundColorFlagChanged = YES;
     self.tweetBackgroundColor = backgroundColor;
 }
@@ -132,7 +140,8 @@ alpha:1.0]
 
 #pragma mark - views layout
 /////////////////////// VIEW LAYOUT /////////////
-- (void)setupViews {
+- (void)setupViews
+{
     [self createTwitterClientAndTwitterView];
     [self createActivityIndicator];
     [self createFrameInfoTimer];
@@ -143,7 +152,8 @@ alpha:1.0]
 }
 
 //timer for yoga notifications
-- (void)createFrameInfoTimer {
+- (void)createFrameInfoTimer
+{
     timer = [NSTimer scheduledTimerWithTimeInterval:.01f
                                              target:self
                                            selector:@selector(checkFrameInfoDone:)
@@ -152,10 +162,11 @@ alpha:1.0]
 }
 
 
--(void)checkFrameInfoDone:(NSTimer*)timer {
-    if(self.frame.size.width > 0 && self.frame.size.height > 0){
-        if(self.twitterDidLoadWithSuccess || self.twitterDidFailWithError){
-            if([timer isValid]){
+-(void)checkFrameInfoDone:(NSTimer*)timer
+{
+    if(self.frame.size.width > 0 && self.frame.size.height > 0) {
+        if(self.twitterDidLoadWithSuccess || self.twitterDidFailWithError) {
+            if([timer isValid]) {
                 [timer invalidate];
             }
             
@@ -166,8 +177,9 @@ alpha:1.0]
 
 
 
-- (void)adjustViewsLayout {
-    if(self.twitterDidLoadWithSuccess){
+- (void)adjustViewsLayout
+{
+    if (self.twitterDidLoadWithSuccess) {
         [self adjustViewsLayoutTweetLoadSuccess];
     } else if(self.twitterDidFailWithError) {
         [self adjustViewsLayoutTweetLoadFail];
@@ -175,7 +187,8 @@ alpha:1.0]
 }
 
 //LOAD WITH SUCCESS----
-- (void)adjustViewsLayoutTweetLoadSuccess {
+- (void)adjustViewsLayoutTweetLoadSuccess
+{
     //adjust twitter view
     CGSize desiredSize = [self.tweetView sizeThatFits:CGSizeMake(self.frame.size.width, CGFLOAT_MAX)];
     //NSLog(@"SIZE = %f   %f", desiredSize.width, desiredSize.height);
@@ -198,7 +211,8 @@ alpha:1.0]
 }
 
 //LOAD FAILS----
-- (void)adjustViewsLayoutTweetLoadFail {
+- (void)adjustViewsLayoutTweetLoadFail
+{
     
     self.backgroundColor = [UIColor whiteColor];
     
@@ -206,7 +220,7 @@ alpha:1.0]
     NSUInteger const messageHeight = 20;
     NSUInteger const messageYOffset = 26;
     UILabel *twitLoadErrorMessage = [[UILabel alloc] init];
-    CGRect messageFrame = CGRectMake(0, self.frame.size.height-messageHeight-messageYOffset, self.frame.size.width, messageHeight);
+    CGRect messageFrame = CGRectMake(0, self.frame.size.height - messageHeight - messageYOffset, self.frame.size.width, messageHeight);
     twitLoadErrorMessage.frame = messageFrame;
     twitLoadErrorMessage.textAlignment = NSTextAlignmentCenter;
     twitLoadErrorMessage.font = [UIFont fontWithName:@"Helvetica" size:15];
@@ -240,35 +254,37 @@ alpha:1.0]
 
 
 #pragma mark - Tweeter properties apply
-- (void) applyViewProperties {
+- (void)applyViewProperties
+{
     //default values
     self.tweetView.showActionButtons = YES;
     
-    if(self.actionButtonsFlagChanged){
+    if (self.actionButtonsFlagChanged) {
         self.tweetView.showActionButtons = self.showActionButtons;
     }
     
-    if(self.showBorderFlagChanged){
+    if (self.showBorderFlagChanged) {
         self.tweetView.showBorder = self.showBorder;
     }
     
-    if(self.primaryTextColorFlagChanged){
+    if (self.primaryTextColorFlagChanged) {
         self.tweetView.primaryTextColor = UIColorFromRGB([self.primaryTextColor unsignedIntegerValue]);
     }
     
-    if(self.linkTextColorFlagChanged){
+    if (self.linkTextColorFlagChanged) {
         self.tweetView.linkTextColor = UIColorFromRGB([self.linkTextColor unsignedIntegerValue]);
     }
     
-    if(self.tweetStyleFlagChanged){
-        if([[self.tweetStyle lowercaseString] isEqualToString:@"twtrtweetviewstyleregular"]){
-            self.tweetView.style = TWTRTweetViewStyleRegular;
-        } else {
-            self.tweetView.style = TWTRTweetViewStyleCompact;
-        }
-    }
+    // TODO remove support for now as it needs to recreate the view
+//    if(self.tweetStyleFlagChanged) {
+//        if([[self.tweetStyle lowercaseString] isEqualToString:@"twtrtweetviewstyleregular"]){
+//            self.tweetView.style = TWTRTweetViewStyleRegular;
+//        } else {
+//            self.tweetView.style = TWTRTweetViewStyleCompact;
+//        }
+//    }
     
-    if(self.tweetThemeFlagChanged){
+    if (self.tweetThemeFlagChanged) {
         if([[self.tweetTheme lowercaseString] isEqualToString:@"twtrtweetviewthemelight"])
         {
             self.tweetView.theme = TWTRTweetViewThemeLight;
@@ -277,7 +293,7 @@ alpha:1.0]
         }
     }
     
-    if(self.backgroundColorFlagChanged){
+    if (self.backgroundColorFlagChanged) {
         self.tweetView.backgroundColor = UIColorFromRGB([self.tweetBackgroundColor unsignedIntegerValue]);
     }
     
@@ -289,15 +305,16 @@ alpha:1.0]
     }
     
     tweetHeightChangedTimer = [NSTimer scheduledTimerWithTimeInterval:0.1f
-                                             target:self
-                                           selector:@selector(sendHeightChangeMethod:)
-                                           userInfo:nil
-                                            repeats:YES];
+                                                               target:self
+                                                             selector:@selector(sendHeightChangeMethod:)
+                                                             userInfo:nil
+                                                              repeats:YES];
     
 }
 
 
--(void)sendHeightChangeMethod:(NSTimer*)timer {
+-(void)sendHeightChangeMethod:(NSTimer*)timer
+{
     //if height of the tweet view changes inform the shadowview to change layout
     if([self.tweetHeight floatValue] > 0){
         if([tweetHeightChangedTimer isValid]){
@@ -319,7 +336,8 @@ alpha:1.0]
 
 
 #pragma mark - IBActions
-- (IBAction)reloadTwitterButtonClicked:(id)sender {
+- (IBAction)reloadTwitterButtonClicked:(id)sender
+{
     
     //hide tweet view when loading
     self.tweetView.hidden = YES;
@@ -344,7 +362,8 @@ alpha:1.0]
 
 #pragma mark - Tweetter object
 ///////////////// TWEETER OBJECT //////////////////
-- (void) createTwitterClientAndTwitterView {
+- (void) createTwitterClientAndTwitterView
+{
     self.twitterAPIClient = [[TWTRAPIClient alloc] init];
     
     self.tweetView = [[TWTRTweetView alloc] init];
@@ -355,7 +374,8 @@ alpha:1.0]
 }
 
 
-- (void)loadTweetWithID:(NSString*)tweetID {
+- (void)loadTweetWithID:(NSString*)tweetID
+{
     
     activityIndicator.hidden = NO;
     [activityIndicator startAnimating];
@@ -379,7 +399,8 @@ alpha:1.0]
 
 #pragma mark - other
 //////////// OTHER ///////////////
-- (void)createActivityIndicator {
+- (void)createActivityIndicator
+{
     activityIndicator = [[UIActivityIndicatorView alloc] initWithFrame:CGRectZero];
     activityIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyleGray;
     activityIndicator.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
