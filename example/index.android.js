@@ -23,6 +23,7 @@ import {
   Text,
   View,
   TextInput,
+  Switch,
   Dimensions,
   DeviceEventEmitter,
   ScrollView
@@ -60,15 +61,17 @@ export default class example extends Component {
     const height = parseInt(this.state.text);
     return (
       <ScrollView style={styles.container}>
-	  	<Text style={styles.instructions}>
+        <Text style={styles.instructions}>
            Text Above Tweet
-         </Text>
-		  <TweetView
-			style={styles.empty_syle}
-			tweetid={'828627783119208449'}/>
-      <Text style={styles.instructions}>
+        </Text>
+        <TweetView
+          style={styles.empty_syle}
+          tweetid={'828627783119208449'} />
+        <Text style={styles.instructions}>
            Text Bellow Tweet
-         </Text>
+        </Text>
+        <Switch value={true} />
+
       </ScrollView>
     );
   }
@@ -79,30 +82,30 @@ const styles = StyleSheet.create({
 
   },
   container: {
-    flex: 0,
+    flex: 1,
   },
-	/*container: {
-		flex: 1,
+  /*container: {
+    flex: 1,
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
-		backgroundColor: '#EEEEEE',
-	},*/
-	instructions: {
-		textAlign: 'center',
-		color: '#000000',
-	},
-	twitter_that_works: {
+    backgroundColor: '#EEEEEE',
+  },*/
+  instructions: {
+    textAlign: 'center',
+    color: '#000000',
+  },
+  twitter_that_works: {
     flex: 0,
     width: screenWidth,
-  	height: 325,
+    height: 325,
     backgroundColor: '#FFFFFF',
-	},
-	twitter_that_doesnot_work: {
-	  flex: 1,
+  },
+  twitter_that_doesnot_work: {
+    flex: 1,
       width: 400,
       height: 100,
-	},
+  },
 });
 
 AppRegistry.registerComponent('example', () => example);

@@ -18,7 +18,6 @@ import com.twitter.sdk.android.Twitter;
 import com.twitter.sdk.android.core.TwitterAuthConfig;
 
 import io.fabric.sdk.android.Fabric;
-import io.fabric.sdk.android.Logger;
 
 public class RNTwitterKitPackage implements ReactPackage {
 
@@ -50,7 +49,7 @@ public class RNTwitterKitPackage implements ReactPackage {
     public List<ViewManager> createViewManagers(
             ReactApplicationContext reactContext) {
         return Arrays.<ViewManager>asList(
-                new RNTwitterKitViewManager()
+                new ReactTweetViewManager()
         );
     }
 }
