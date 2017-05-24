@@ -163,9 +163,9 @@ alpha:1.0]
 
 -(void)checkFrameInfoDone:(NSTimer*)timer
 {
-    if(self.frame.size.width > 0 && self.frame.size.height > 0) {
-        if(self.twitterDidLoadWithSuccess || self.twitterDidFailWithError) {
-            if([timer isValid]) {
+    if (self.frame.size.width > 0 && self.frame.size.height > 0) {
+        if (self.twitterDidLoadWithSuccess || self.twitterDidFailWithError) {
+            if ([timer isValid]) {
                 [timer invalidate];
             }
             
@@ -328,7 +328,7 @@ alpha:1.0]
             //notify the view manager that the tweet view height has changed and pass the necessary data to the view manager
             [[NSNotificationCenter defaultCenter]
              postNotificationName:@"HeightChangeNotification"
-             object:dictWithTweetViewAndHisHeight];
+                           object:dictWithTweetViewAndHisHeight];
         }
     }
 }

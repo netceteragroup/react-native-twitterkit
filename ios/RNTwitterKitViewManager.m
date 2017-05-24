@@ -1,17 +1,10 @@
-//
-//  RNTwitterKitViewManager.m
-//  RNTwitterkit
-//
-//  Created by Andi Anton on 28/03/2017.
-//  Copyright © 2017 Facebook. All rights reserved.
-//
-
-#import "RNTwitterKitViewManager.h"
-#import "RNTwitterKitView.h"
 #import <React/RCTShadowView.h>
 #import <React/RCTUIManager.h>
 #import <TwitterKit/TwitterKit.h>
 
+#import "RNTwitterKitViewManager.h"
+#import "RNTwitterKitView.h"
+#import "RNTweetShadowView.h"
 
 @implementation RNTwitterKitViewManager
 
@@ -47,9 +40,7 @@ RCT_REMAP_VIEW_PROPERTY(backgroundColor, BACKGROUNDCOLOR, NSNumber);
 
 - (RCTShadowView *)shadowView
 {
-    self.sv = [RCTShadowView new];
-    self.sv.intrinsicContentSize = CGSizeMake(300, 260);
-    return self.sv;
+    return [RNTweetShadowView new];
 }
 
 

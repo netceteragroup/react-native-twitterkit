@@ -15,8 +15,7 @@
 // - move tweet view delegate methods here
 // - remove timer-based check on layout change
 // - specify load error message via props
-@interface RNTwitterKitViewManager : RCTViewManager
-
-@property (nonatomic, strong) RCTShadowView *sv;
+// - user credentials from the system?
+@interface RNTwitterKitViewManager : RCTViewManager <RNTwitterKitViewDelegate>
 
 @end
