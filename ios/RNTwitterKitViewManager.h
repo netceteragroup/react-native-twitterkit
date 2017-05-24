@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <React/RCTViewManager.h>
 #import "RNTwitterKitView.h"
-#import <React/RctshadowView.h>
+#import <React/RCTShadowView.h>
 
 // TODO:
 // - move tweet view delegate methods here

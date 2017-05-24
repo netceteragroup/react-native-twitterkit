@@ -13,9 +13,7 @@
 #import <TwitterKit/TwitterKit.h>
 
 
-@implementation RNTwitterKitViewManager {
-    TWTRAPIClient *client;
-}
+@implementation RNTwitterKitViewManager
 
 RCT_EXPORT_MODULE(TweetView);
 RCT_REMAP_VIEW_PROPERTY(tweetid, TWEETID, NSString);
@@ -77,12 +75,13 @@ RCT_REMAP_VIEW_PROPERTY(backgroundColor, BACKGROUNDCOLOR, NSNumber);
 
 - (TWTRAPIClient *)twitterAPIClient
 {
+    static TWTRAPIClient *client = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        self->client = [[TWTRAPIClient alloc] init];
+        client = [[TWTRAPIClient alloc] init];
     });
     
-    return self->client;
+    return client;
 }
 
 @end
