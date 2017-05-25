@@ -41,7 +41,14 @@ public class ReactTwitterKitPackage implements ReactPackage {
     this.consumerSecret = consumerSecret;
   }
 
-  public  void initFabric(Context reactContext) {
+  /**
+   * Initializes the package *without* initializing Fabric.
+   */
+  public ReactTwitterKitPackage() {
+    this(null, null);
+  }
+
+  public void initFabric(Context reactContext) {
     if (consumerKey == null || consumerSecret == null) {
       return;
     }
@@ -55,6 +62,8 @@ public class ReactTwitterKitPackage implements ReactPackage {
 
     Fabric.with(fabric);
   }
+
+
 
   @Override
   public List<NativeModule> createNativeModules(ReactApplicationContext reactContext) {
