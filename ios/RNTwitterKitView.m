@@ -57,6 +57,9 @@ alpha:1.0]
 
 //tweeter height after loading tweet
 @property (nonatomic) NSNumber *tweetHeight;
+@property (nonatomic) NSNumber *tweetWidth;
+
+@property (nonatomic) BOOL posponedResize;
 @end
 
 
@@ -71,8 +74,11 @@ alpha:1.0]
 - (instancetype)init
 {
     self = [super init];
-    self.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+//    self.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    self.autoresizesSubviews = YES;
+    self.clipsToBounds = YES;
     [self setupViews];
+    self.posponedResize = NO;
     return self;
 }
 
@@ -143,37 +149,11 @@ alpha:1.0]
 {
     [self createTwitterView];
     [self createActivityIndicator];
-    [self createFrameInfoTimer];
     
     //add subviews
     [self addSubview:self.tweetView];
     [self addSubview:activityIndicator];
 }
-
-//timer for yoga notifications
-- (void)createFrameInfoTimer
-{
-    timer = [NSTimer scheduledTimerWithTimeInterval:.01f
-                                             target:self
-                                           selector:@selector(checkFrameInfoDone:)
-                                           userInfo:nil
-                                            repeats:YES];
-}
-
-
--(void)checkFrameInfoDone:(NSTimer*)timer
-{
-    if (self.frame.size.width > 0 && self.frame.size.height > 0) {
-        if (self.twitterDidLoadWithSuccess || self.twitterDidFailWithError) {
-            if ([timer isValid]) {
-                [timer invalidate];
-            }
-            
-            [self adjustViewsLayout];
-        }
-    }
-}
-
 
 
 - (void)adjustViewsLayout
@@ -185,28 +165,53 @@ alpha:1.0]
     }
 }
 
+- (void)reactSetFrame:(CGRect)frame
+{
+    NSLog(@"React sets frame: %f, %f", frame.size.width, frame.size.height);
+    [super reactSetFrame:frame];
+    self.tweetView.frame = self.tweetView.bounds;
+    [self.tweetView layoutIfNeeded];
+    
+    if (self.posponedResize) {
+        self.posponedResize = NO;
+        
+        CGSize desiredSize = [self.tweetView sizeThatFits:CGSizeMake(self.bounds.size.width, CGFLOAT_MAX)];
+        NSLog(@"MEASURED SIZE = %f   %f", desiredSize.width, desiredSize.height);
+        [self sendSizeChange:desiredSize];
+
+    }
+}
+
 //LOAD WITH SUCCESS----
 - (void)adjustViewsLayoutTweetLoadSuccess
 {
     //adjust twitter view
-    CGSize desiredSize = [self.tweetView sizeThatFits:CGSizeMake(self.frame.size.width, CGFLOAT_MAX)];
-    //NSLog(@"SIZE = %f   %f", desiredSize.width, desiredSize.height);
-    
-    if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"twitter://"]]) {
-        // Twitter app is installed
-        desiredSize.height += 30;
-    }
-    
-    //adjust self frame
-    CGRect selfViewRect = CGRectMake(self.frame.origin.x, self.frame.origin.y, desiredSize.width, desiredSize.height);
-    self.frame = selfViewRect;
-    
-    //apply properties from the JS
     [self applyViewProperties];
     
     self.tweetView.hidden = NO;
     
-    self.tweetHeight = [NSNumber numberWithFloat:desiredSize.height];
+    CGFloat width = self.frame.size.width;
+    if (width == 0) {
+        self.posponedResize = YES;
+    } else {
+        CGSize desiredSize = [self.tweetView sizeThatFits:CGSizeMake(width, CGFLOAT_MAX)];
+        NSLog(@"MEASURED SIZE = %f   %f", desiredSize.width, desiredSize.height);
+        [self sendSizeChange:desiredSize];
+    }
+
+    
+//    if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"twitter://"]]) {
+//        // Twitter app is installed
+//        desiredSize.height += 30;
+//    }
+    
+    //adjust self frame
+//    CGRect selfViewRect = CGRectMake(self.frame.origin.x, self.frame.origin.y, desiredSize.width, desiredSize.height);
+//    self.frame = selfViewRect;
+    
+    //apply properties from the JS
+    
+    
 }
 
 //LOAD FAILS----
@@ -296,18 +301,18 @@ alpha:1.0]
         self.tweetView.backgroundColor = UIColorFromRGB([self.tweetBackgroundColor unsignedIntegerValue]);
     }
     
-    if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"twitter://"]]) {
-        // Twitter app is installed
-    } else {
-        // Twitter app is NOT installed
-        self.tweetView.showActionButtons = NO;
-    }
+//    if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"twitter://"]]) {
+//        // Twitter app is installed
+//    } else {
+//        // Twitter app is NOT installed
+//        self.tweetView.showActionButtons = NO;
+//    }
     
-    tweetHeightChangedTimer = [NSTimer scheduledTimerWithTimeInterval:0.1f
-                                                               target:self
-                                                             selector:@selector(sendHeightChangeMethod:)
-                                                             userInfo:nil
-                                                              repeats:YES];
+//    tweetHeightChangedTimer = [NSTimer scheduledTimerWithTimeInterval:0.1f
+//                                                               target:self
+//                                                             selector:@selector(sendHeightChangeMethod:)
+//                                                             userInfo:nil
+//                                                              repeats:YES];
     
 }
 
@@ -333,6 +338,13 @@ alpha:1.0]
     }
 }
 
+- (void)sendSizeChange:(CGSize)size
+{
+    id<RNTwitterKitViewDelegate> delegate = self.delegate; // weak -> strong
+    if ([delegate respondsToSelector:@selector(tweetView:requestsResize:)]) {
+        [delegate tweetView:self requestsResize:size];
+    }
+}
 
 #pragma mark - IBActions
 - (IBAction)reloadTwitterButtonClicked:(id)sender
@@ -351,7 +363,6 @@ alpha:1.0]
     self.twitterDidFailWithError = NO;
     
     //recreate info timer for readjusting layout
-    [self createFrameInfoTimer];
     
     NSLog(@"\nreload tweet");
     
@@ -381,9 +392,11 @@ alpha:1.0]
     [self.twitterAPIClient loadTweetWithID:tweetID completion:^(TWTRTweet *tweet, NSError *error) {
         if (tweet) {
             [self.tweetView configureWithTweet:tweet];
-            [activityIndicator stopAnimating];
-            activityIndicator.hidden = YES;
             self.twitterDidLoadWithSuccess = YES;
+            [activityIndicator stopAnimating];
+            [self applyViewProperties];
+            [self adjustViewsLayout];
+            activityIndicator.hidden = YES;
         } else {
             NSLog(@"Failed to load tweet: %@", [error localizedDescription]);
             [activityIndicator stopAnimating];

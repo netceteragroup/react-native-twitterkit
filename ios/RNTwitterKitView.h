@@ -20,7 +20,7 @@
 @protocol RNTwitterKitViewDelegate <NSObject>
 @optional
 
-- (void)tweetView:(RNTwitterKitView *)view didChangeIntrinsicSize:(CGSize)newSize;
+- (void)tweetView:(RNTwitterKitView *)view requestsResize:(CGSize)newSize;
 @end
 
 @interface RNTwitterKitView : RCTView<TWTRTweetViewDelegate>

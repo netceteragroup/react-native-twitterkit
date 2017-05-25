@@ -22,7 +22,6 @@ RCT_REMAP_VIEW_PROPERTY(backgroundColor, BACKGROUNDCOLOR, NSNumber);
 
 - (UIView *)view
 {
-    [self createHeightChangeNotification];
     RNTwitterKitView *view = [[RNTwitterKitView alloc] init];
     view.delegate = self;
     view.twitterAPIClient = [self twitterAPIClient];
@@ -31,37 +30,27 @@ RCT_REMAP_VIEW_PROPERTY(backgroundColor, BACKGROUNDCOLOR, NSNumber);
 }
 
 
-- (void) createHeightChangeNotification {
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(receiveHeightChangeNotification:)
-                                                 name:@"HeightChangeNotification"
-                                               object:nil];
-}
 
 - (RCTShadowView *)shadowView
 {
     return [RNTweetShadowView new];
 }
 
-
-- (void)receiveHeightChangeNotification:(NSNotification *)notification
+- (void)tweetView:(RNTwitterKitView *)view requestsResize:(CGSize)newSize
 {
-    if ([[notification name] isEqualToString:@"HeightChangeNotification"]) {
-        
-        //getting the new height of tweet
-        float tweetHeight = [[notification.object objectForKey:@"tweetHeight"] floatValue];
-        
-        //getting the tweet view
-        UIView *tweetView = [notification.object objectForKey:@"tweeterView"];
-        
-        //create a new size fot the tweet view
-        CGSize newTweetViewSize = CGSizeMake(300, tweetHeight);
-        
-        //getting the UI manager and set the intrinsic content size of the tweet view
-        RCTUIManager *UIManager = [self.bridge uiManager];
-        [UIManager setIntrinsicContentSize:newTweetViewSize forView:tweetView];
-        
-    }
+    
+    //getting the tweet view
+    UIView *tweetView = view;
+    
+    //create a new size fot the tweet view
+    CGSize newTweetViewSize = newSize;
+    
+    
+    NSLog(@"new tweet size: %f,%f", newTweetViewSize.width, newTweetViewSize.height);
+    //getting the UI manager and set the intrinsic content size of the tweet view
+    RCTUIManager *UIManager = [self.bridge uiManager];
+    
+    [UIManager setSize:newTweetViewSize forView:tweetView];
 }
 
 - (TWTRAPIClient *)twitterAPIClient
