@@ -70,12 +70,10 @@ const styles = StyleSheet.create({
   twitter1: {
     flex: 0,
     width: 300,
-    height: 100,
   },
   twitter2: {
     flex: 0,
     width: 300,
-    height: 300,
   }
 });
 

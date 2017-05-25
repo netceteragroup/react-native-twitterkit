@@ -15,6 +15,16 @@
 #import <React/UIView+React.h>
 #import <TwitterKit/TwitterKit.h>
 
+@class RNTwitterKitView;
+
+@protocol RNTwitterKitViewDelegate <NSObject>
+@optional
+
+- (void)tweetView:(RNTwitterKitView *)view didChangeIntrinsicSize:(CGSize)newSize;
+@end
+
 @interface RNTwitterKitView : RCTView<TWTRTweetViewDelegate>
 
+@property(nonatomic, weak) id<RNTwitterKitViewDelegate> delegate;
+@property (nonatomic, strong) TWTRAPIClient *twitterAPIClient;
 @end

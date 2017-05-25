@@ -9,10 +9,13 @@
 #import <Foundation/Foundation.h>
 #import <React/RCTViewManager.h>
 #import "RNTwitterKitView.h"
-#import <React/RctshadowView.h>
+#import <React/RCTShadowView.h>
 
-@interface RNTwitterKitViewManager : RCTViewManager
-
-@property (nonatomic, strong) RCTShadowView *sv;
+// TODO:
+// - move tweet view delegate methods here
+// - remove timer-based check on layout change
+// - specify load error message via props
+// - user credentials from the system?
+@interface RNTwitterKitViewManager : RCTViewManager <RNTwitterKitViewDelegate>
 
 @end

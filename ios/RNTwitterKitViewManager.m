@@ -1,16 +1,10 @@
-//
-//  RNTwitterKitViewManager.m
-//  RNTwitterkit
-//
-//  Created by Andi Anton on 28/03/2017.
-//  Copyright © 2017 Facebook. All rights reserved.
-//
+#import <React/RCTShadowView.h>
+#import <React/RCTUIManager.h>
+#import <TwitterKit/TwitterKit.h>
 
 #import "RNTwitterKitViewManager.h"
 #import "RNTwitterKitView.h"
-#import <React/RctshadowView.h>
-#import <React/RctUIManager.h>
-
+#import "RNTweetShadowView.h"
 
 @implementation RNTwitterKitViewManager
 
@@ -29,7 +23,11 @@ RCT_REMAP_VIEW_PROPERTY(backgroundColor, BACKGROUNDCOLOR, NSNumber);
 - (UIView *)view
 {
     [self createHeightChangeNotification];
-    return [[RNTwitterKitView alloc] init];
+    RNTwitterKitView *view = [[RNTwitterKitView alloc] init];
+    view.delegate = self;
+    view.twitterAPIClient = [self twitterAPIClient];
+    
+    return view;
 }
 
 
@@ -42,15 +40,13 @@ RCT_REMAP_VIEW_PROPERTY(backgroundColor, BACKGROUNDCOLOR, NSNumber);
 
 - (RCTShadowView *)shadowView
 {
-    self.sv = [RCTShadowView new];
-    self.sv.intrinsicContentSize = CGSizeMake(300, 260);
-    return self.sv;
+    return [RNTweetShadowView new];
 }
 
 
-- (void) receiveHeightChangeNotification:(NSNotification *) notification
+- (void)receiveHeightChangeNotification:(NSNotification *)notification
 {
-    if ([[notification name] isEqualToString:@"HeightChangeNotification"]){
+    if ([[notification name] isEqualToString:@"HeightChangeNotification"]) {
         
         //getting the new height of tweet
         float tweetHeight = [[notification.object objectForKey:@"tweetHeight"] floatValue];
@@ -68,5 +64,15 @@ RCT_REMAP_VIEW_PROPERTY(backgroundColor, BACKGROUNDCOLOR, NSNumber);
     }
 }
 
+- (TWTRAPIClient *)twitterAPIClient
+{
+    static TWTRAPIClient *client = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        client = [[TWTRAPIClient alloc] init];
+    });
+    
+    return client;
+}
 
 @end
