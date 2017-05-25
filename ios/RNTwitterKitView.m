@@ -315,8 +315,8 @@ alpha:1.0]
 -(void)sendHeightChangeMethod:(NSTimer*)timer
 {
     //if height of the tweet view changes inform the shadowview to change layout
-    if([self.tweetHeight floatValue] > 0){
-        if([tweetHeightChangedTimer isValid]){
+    if ([self.tweetHeight floatValue] > 0) {
+        if ([tweetHeightChangedTimer isValid]) {
             [tweetHeightChangedTimer invalidate];
             
             //create a dictionary which contains the tweet view reference and his new height
@@ -361,7 +361,7 @@ alpha:1.0]
 
 #pragma mark - Tweetter object
 ///////////////// TWEETER OBJECT //////////////////
-- (void) createTwitterView
+- (void)createTwitterView
 {
     
     self.tweetView = [[TWTRTweetView alloc] init];
@@ -378,8 +378,7 @@ alpha:1.0]
     activityIndicator.hidden = NO;
     [activityIndicator startAnimating];
     
-    [self.twitterAPIClient loadTweetWithID:tweetID completion:^(TWTRTweet *tweet, NSError *error)
-    {
+    [self.twitterAPIClient loadTweetWithID:tweetID completion:^(TWTRTweet *tweet, NSError *error) {
         if (tweet) {
             [self.tweetView configureWithTweet:tweet];
             [activityIndicator stopAnimating];
