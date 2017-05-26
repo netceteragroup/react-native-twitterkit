@@ -74,9 +74,6 @@ alpha:1.0]
 - (instancetype)init
 {
     self = [super init];
-//    self.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    self.autoresizesSubviews = YES;
-    self.clipsToBounds = YES;
     [self setupViews];
     self.posponedResize = NO;
     return self;
@@ -149,10 +146,6 @@ alpha:1.0]
 {
     [self createTwitterView];
     [self createActivityIndicator];
-    
-    //add subviews
-    [self addSubview:self.tweetView];
-    [self addSubview:activityIndicator];
 }
 
 
@@ -169,8 +162,8 @@ alpha:1.0]
 {
     NSLog(@"React sets frame: %f, %f", frame.size.width, frame.size.height);
     [super reactSetFrame:frame];
-    self.tweetView.frame = self.tweetView.bounds;
-    [self.tweetView layoutIfNeeded];
+    
+    [self layoutIfNeeded];
     
     if (self.posponedResize) {
         self.posponedResize = NO;
@@ -308,35 +301,10 @@ alpha:1.0]
 //        self.tweetView.showActionButtons = NO;
 //    }
     
-//    tweetHeightChangedTimer = [NSTimer scheduledTimerWithTimeInterval:0.1f
-//                                                               target:self
-//                                                             selector:@selector(sendHeightChangeMethod:)
-//                                                             userInfo:nil
-//                                                              repeats:YES];
     
 }
 
 
--(void)sendHeightChangeMethod:(NSTimer*)timer
-{
-    //if height of the tweet view changes inform the shadowview to change layout
-    if ([self.tweetHeight floatValue] > 0) {
-        if ([tweetHeightChangedTimer isValid]) {
-            [tweetHeightChangedTimer invalidate];
-            
-            //create a dictionary which contains the tweet view reference and his new height
-            NSDictionary *dictWithTweetViewAndHisHeight = [NSDictionary dictionaryWithObjectsAndKeys:
-                                   self, @"tweeterView",
-                                   [NSNumber numberWithFloat:[self.tweetHeight floatValue]], @"tweetHeight",
-                                   nil];
-            
-            //notify the view manager that the tweet view height has changed and pass the necessary data to the view manager
-            [[NSNotificationCenter defaultCenter]
-             postNotificationName:@"HeightChangeNotification"
-                           object:dictWithTweetViewAndHisHeight];
-        }
-    }
-}
 
 - (void)sendSizeChange:(CGSize)size
 {
@@ -374,12 +342,31 @@ alpha:1.0]
 ///////////////// TWEETER OBJECT //////////////////
 - (void)createTwitterView
 {
-    
-    self.tweetView = [[TWTRTweetView alloc] init];
-    self.tweetView.frame = self.frame;
-    self.tweetView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    TWTRTweetView *tweetView = [[TWTRTweetView alloc] init];
+    self.tweetView = tweetView;
+    self.tweetView.translatesAutoresizingMaskIntoConstraints = NO;
     self.twitterDidLoadWithSuccess = NO;
     self.tweetView.hidden = YES;
+ 
+    [self addSubview:self.tweetView];
+
+    NSArray *hConstraints =
+    [NSLayoutConstraint constraintsWithVisualFormat:@"|[tweetView]|"
+                                            options:0
+                                            metrics:nil
+                                              views:NSDictionaryOfVariableBindings(tweetView)];
+    [self addConstraints:hConstraints];
+    
+    NSArray *vConstraints =
+    [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[tweetView]|"
+                                            options:0
+                                            metrics:nil
+                                              views:NSDictionaryOfVariableBindings(tweetView)];
+    [self addConstraints:vConstraints];
+    
+    [NSLayoutConstraint activateConstraints:hConstraints];
+    [NSLayoutConstraint activateConstraints:vConstraints];
+
 }
 
 
@@ -411,10 +398,32 @@ alpha:1.0]
 //////////// OTHER ///////////////
 - (void)createActivityIndicator
 {
+    
     activityIndicator = [[UIActivityIndicatorView alloc] initWithFrame:CGRectZero];
+    activityIndicator.translatesAutoresizingMaskIntoConstraints = NO;
     activityIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyleGray;
-    activityIndicator.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     activityIndicator.hidden = YES;
+    
+    [self addSubview:activityIndicator];
+
+    UIView *parent = self;
+    
+    [self addConstraint:
+     [NSLayoutConstraint constraintWithItem:activityIndicator
+                                  attribute:NSLayoutAttributeCenterX
+                                  relatedBy:NSLayoutRelationEqual
+                                     toItem:parent
+                                  attribute:NSLayoutAttributeCenterX
+                                 multiplier:1
+                                   constant:0]];
+    [self addConstraint:
+     [NSLayoutConstraint constraintWithItem:activityIndicator
+                                  attribute:NSLayoutAttributeCenterY
+                                  relatedBy:NSLayoutRelationEqual
+                                     toItem:parent
+                                  attribute:NSLayoutAttributeCenterY
+                                 multiplier:1
+                                   constant:0]];
 }
 
 @end
