@@ -6,9 +6,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import com.facebook.react.bridge.Arguments;
+import com.facebook.react.bridge.ReactContext;
+import com.facebook.react.bridge.WritableMap;
+import com.facebook.react.uimanager.events.RCTEventEmitter;
 import com.twitter.sdk.android.core.Callback;
 import com.twitter.sdk.android.core.Result;
 import com.twitter.sdk.android.core.TwitterException;
@@ -21,6 +24,8 @@ import java.util.ArrayList;
 
 class TweetView extends RelativeLayout {
 
+
+
   public interface SizeChangeListener {
     void onSizeChanged(TweetView view, int width, int height);
   }
@@ -29,13 +34,11 @@ class TweetView extends RelativeLayout {
 
   private View tweetMainContainer;
 
-  private ImageView reloadButton;
-  private RelativeLayout reloadContainer;
-  private RelativeLayout errorContainer;
   private CompactTweetView tweetView;
   private RelativeLayout loadingContainer;
   private int reactTag;
 
+  private boolean postponedResize = false;
 
   private Tweet tweet = null;
   private long tweetId = Long.MIN_VALUE;
@@ -64,30 +67,53 @@ class TweetView extends RelativeLayout {
       setTweetIdInternally(tweet.getId());
     }
 
-    boolean laidOut = tweetView.isLaidOut();
-
     tweetView.setTweet(tweet);
     initializeTweetView();
 
-    if (laidOut) {
-      updateSize();
-    } else {
-      post(new Runnable() {
-        @Override
-        public void run() {
-          updateSize();
-        }
-      });
-    }
+    updateSize();
+  }
 
+  public void respondToNewProps() {
+    if (this.tweetId == Long.MIN_VALUE) {
+      handleError();
+    }
+  }
+
+  @Override
+  protected void onLayout(boolean changed, int l, int t, int r, int b) {
+    super.onLayout(changed, l, t, r, b);
+
+    if (postponedResize) {
+      postponedResize = false;
+      updateSize();
+    }
   }
 
   private void updateSize() {
     LogUtils.d(TAG, "updateSize");
 
+    if (getWidth() <= 0) {
+      Log.d(TAG, "width is still 0, postponing updateSize()");
+      postponedResize = true;
+      return;
+    }
+
     measureTweet();
     requestLayout();
-    fireSizeChange(tweetView.getWidth(), tweetView.getMeasuredHeight());
+
+
+    fireSizeChange(getWidth(), tweetView.getMeasuredHeight());
+  }
+
+
+  private void measureTweet() {
+
+    int w = View.MeasureSpec.makeMeasureSpec(getWidth(), MeasureSpec.EXACTLY);
+    int h = View.MeasureSpec.makeMeasureSpec(ViewGroup.LayoutParams.WRAP_CONTENT, MeasureSpec.UNSPECIFIED);
+
+    Log.d(TAG, "Measured " + tweetView.getMeasuredWidth() + ", " + tweetView.getMeasuredHeight());
+
+    tweetView.measure(w, h);
   }
 
   public void setTweetId(long tweetId) {
@@ -134,70 +160,48 @@ class TweetView extends RelativeLayout {
 
   private void findViews() {
     loadingContainer = (RelativeLayout) tweetMainContainer.findViewById(R.id.loading_container);
-    reloadContainer = (RelativeLayout) findViewById(R.id.reload_container);
-    errorContainer = (RelativeLayout) tweetMainContainer.findViewById(R.id.error_container);
     tweetView = (CompactTweetView) findViewById(R.id.tweet_view);
-    reloadButton = (ImageView) findViewById(R.id.reload_button);
   }
 
   private void initializeTweetView() {
-    errorContainer.setVisibility(View.INVISIBLE);
-    reloadContainer.setVisibility(View.INVISIBLE);
     loadingContainer.setVisibility(View.INVISIBLE);
 
     tweetView.setVisibility(View.VISIBLE);
   }
 
-  private void measureTweet() {
-
-    int w = View.MeasureSpec.makeMeasureSpec(tweetView.getWidth(), MeasureSpec.EXACTLY);
-    int h = View.MeasureSpec.makeMeasureSpec(ViewGroup.LayoutParams.WRAP_CONTENT, MeasureSpec.UNSPECIFIED);
-
-    tweetView.measure(w, h);
-  }
 
   private void setLoadingView() {
     LogUtils.d(TAG, "setLoadingView");
-    errorContainer.setVisibility(View.INVISIBLE);
-    reloadContainer.setVisibility(View.INVISIBLE);
     tweetView.setVisibility(View.INVISIBLE);
     loadingContainer.setVisibility(View.VISIBLE);
   }
 
-  private void setErrorView() {
-    LogUtils.d(TAG, "setErrorView");
-    reloadContainer.setVisibility(View.INVISIBLE);
-    loadingContainer.setVisibility(View.INVISIBLE);
+  private void handleError() {
+    LogUtils.d(TAG, "handleError");
     tweetView.setVisibility(View.INVISIBLE);
-    errorContainer.setVisibility(View.VISIBLE);
+
+    WritableMap evt = Arguments.createMap();
+    evt.putString("message", "Could not load tweet");
+
+    ReactContext ctx = (ReactContext) getContext();
+    ctx.getJSModule(RCTEventEmitter.class).receiveEvent(
+            getId(),
+            "onLoadError",
+            evt);
+
+  }
+
+  private void handleSuccess() {
+    WritableMap evt = Arguments.createMap();
+
+    ReactContext ctx = (ReactContext) getContext();
+    ctx.getJSModule(RCTEventEmitter.class).receiveEvent(
+            getId(),
+            "onLoadSuccess",
+            evt);
   }
 
   private int errorCounter = 0;
-
-  private void setErrorOrReloadView() {
-    LogUtils.d(TAG, "setErrorOrReloadView");
-    if (errorCounter < 3) {
-      setReloadView();
-    } else {
-      setErrorView();
-    }
-    errorCounter++;
-  }
-
-  private void setReloadView() {
-    LogUtils.d(TAG, "setReloadView");
-    loadingContainer.setVisibility(View.INVISIBLE);
-    tweetView.setVisibility(View.INVISIBLE);
-    errorContainer.setVisibility(View.INVISIBLE);
-    reloadContainer.setVisibility(View.VISIBLE);
-    reloadButton.setOnClickListener(new OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        setLoadingView();
-        loadTweet();
-      }
-    });
-  }
 
   private void loadTweet() {
     LogUtils.d(TAG, "loadTweet, tweetId = " + tweetId);
@@ -208,12 +212,14 @@ class TweetView extends RelativeLayout {
         LogUtils.d(TAG, "loadTweet, success");
         Tweet selectedTweet = result.data;
         setTweet(selectedTweet);
+        handleSuccess();
       }
 
       @Override
       public void failure(TwitterException exception) {
         LogUtils.d(TAG, "loadTweet, failure");
-        setReloadView();
+        // TODO send message
+        handleError();
       }
     });
   }

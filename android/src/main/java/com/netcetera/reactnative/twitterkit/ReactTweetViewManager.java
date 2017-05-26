@@ -55,6 +55,11 @@ public class ReactTweetViewManager
     super.onDropViewInstance(view);
   }
 
+  @Override
+  protected void onAfterUpdateTransaction(TweetView view) {
+    super.onAfterUpdateTransaction(view);
+    view.respondToNewProps();
+  }
 
   @NonNull
   public static TweetView createTweetView(ThemedReactContext context) {

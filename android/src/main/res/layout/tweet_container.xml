@@ -5,95 +5,28 @@
     xmlns:twittersdk="http://schemas.android.com/apk/res-auto">
 
     <com.twitter.sdk.android.tweetui.CompactTweetView
-        android:layout_centerInParent="true"
-        android:visibility="invisible"
         android:id="@+id/tweet_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        android:visibility="invisible"
         twittersdk:tw__tweet_actions_enabled="true"
         twittersdk:tw__tweet_id="846231685750439936"/>
 
     <RelativeLayout
         android:id="@+id/loading_container"
-        android:layout_centerInParent="true"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
         android:visibility="visible">
 
         <ProgressBar
             android:id="@+id/loading_progress_bar"
-            android:layout_centerInParent="true"
+            style="@android:style/Widget.ProgressBar.Small"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@android:style/Widget.ProgressBar.Small" />
-
-        <TextView
-            android:visibility="invisible"
-            android:id="@+id/loading_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:gravity="center"
-            android:text="loading"
-            android:textColor="@android:color/black"
-            android:textSize="16sp" />
+            android:layout_centerInParent="true"/>
 
     </RelativeLayout>
 
-    <RelativeLayout
-        android:id="@+id/reload_container"
-        android:background="@android:color/white"
-        android:layout_centerInParent="true"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="invisible">
-
-        <ImageView
-            android:id="@+id/reload_button"
-            android:layout_width="@dimen/reload_button_width"
-            android:layout_height="@dimen/reload_button_height"
-            android:layout_centerInParent="true"
-            android:src="@drawable/tweet_reload" />
-
-        <TextView
-            android:id="@+id/reload_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:gravity="center"
-            android:text="@string/reload_text"
-            android:textColor="@android:color/black"
-            android:textSize="16sp" />
-
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:id="@+id/error_container"
-        android:background="@android:color/white"
-        android:layout_centerInParent="true"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="invisible">
-
-        <ImageView
-            android:id="@+id/error_image"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:src="@drawable/tweet_error" />
-
-        <TextView
-            android:id="@+id/error_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:gravity="center"
-            android:text="@string/error_text"
-            android:textColor="@android:color/black"
-            android:textSize="16sp" />
-
-    </RelativeLayout>
 </merge>
