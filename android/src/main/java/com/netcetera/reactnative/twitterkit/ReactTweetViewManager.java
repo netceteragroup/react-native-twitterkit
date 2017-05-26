@@ -4,11 +4,16 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.facebook.react.bridge.ReactContext;
+import com.facebook.react.common.MapBuilder;
 import com.facebook.react.uimanager.BaseViewManager;
 import com.facebook.react.uimanager.ThemedReactContext;
 import com.facebook.react.uimanager.UIManagerModule;
 import com.facebook.react.uimanager.annotations.ReactProp;
 import com.twitter.sdk.android.tweetui.ImageLoaderFix;
+
+import java.util.Map;
+
+import javax.annotation.Nullable;
 
 /**
  * Design notes regargind auto-resize of the tweet:
@@ -55,11 +60,6 @@ public class ReactTweetViewManager
     super.onDropViewInstance(view);
   }
 
-  @Override
-  protected void onAfterUpdateTransaction(TweetView view) {
-    super.onAfterUpdateTransaction(view);
-    view.respondToNewProps();
-  }
 
   @NonNull
   public static TweetView createTweetView(ThemedReactContext context) {
@@ -70,6 +70,7 @@ public class ReactTweetViewManager
   @Override
   public void updateExtraData(TweetView view, Object extraData) {
     view.setReactTag((Integer) extraData);
+    view.respondToNewProps();
   }
 
   @Override
@@ -80,6 +81,14 @@ public class ReactTweetViewManager
   @Override
   public Class<TweetShadowNode> getShadowNodeClass() {
     return TweetShadowNode.class;
+  }
+
+  public @Nullable
+  Map getExportedCustomDirectEventTypeConstants() {
+    return MapBuilder.of(
+            "onLoadError", MapBuilder.of("registrationName", "onLoadError"),
+            "onLoadSuccess", MapBuilder.of("registrationName", "onLoadSuccess")
+    );
   }
 
   @Override
