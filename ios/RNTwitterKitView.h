@@ -27,4 +27,9 @@
 
 @property(nonatomic, weak) id<RNTwitterKitViewDelegate> delegate;
 @property (nonatomic, strong) TWTRAPIClient *twitterAPIClient;
+
+@property (nonatomic, copy) RCTBubblingEventBlock onLoadSuccess;
+@property (nonatomic, copy) RCTBubblingEventBlock onLoadError;
+
+- (void)respondToPropChanges;
 @end

@@ -90,6 +90,18 @@ alpha:1.0]
     [self loadTweetWithID:self.tweetIDString];
 }
 
+- (void)respondToPropChanges
+{
+    if (!self.tweetIDString) {
+        [activityIndicator stopAnimating];
+        activityIndicator.hidden = YES;
+        self.twitterDidFailWithError = YES;
+        self.twitterDidLoadWithSuccess = NO;
+        self.tweetView.hidden = YES;
+        [self postError:@"No Tweet ID"];
+    }
+}
+
 //actionButtons
 - (void)setSHOWACTIONBUTTONS:(BOOL)showActionButtons
 {
@@ -153,8 +165,7 @@ alpha:1.0]
 {
     if (self.twitterDidLoadWithSuccess) {
         [self adjustViewsLayoutTweetLoadSuccess];
-    } else if(self.twitterDidFailWithError) {
-        [self adjustViewsLayoutTweetLoadFail];
+    } else if (self.twitterDidFailWithError) {
     }
 }
 
@@ -175,7 +186,7 @@ alpha:1.0]
     }
 }
 
-//LOAD WITH SUCCESS----
+
 - (void)adjustViewsLayoutTweetLoadSuccess
 {
     //adjust twitter view
@@ -191,63 +202,8 @@ alpha:1.0]
         NSLog(@"MEASURED SIZE = %f   %f", desiredSize.width, desiredSize.height);
         [self sendSizeChange:desiredSize];
     }
-
-    
-//    if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"twitter://"]]) {
-//        // Twitter app is installed
-//        desiredSize.height += 30;
-//    }
-    
-    //adjust self frame
-//    CGRect selfViewRect = CGRectMake(self.frame.origin.x, self.frame.origin.y, desiredSize.width, desiredSize.height);
-//    self.frame = selfViewRect;
-    
-    //apply properties from the JS
-    
-    
 }
 
-//LOAD FAILS----
-- (void)adjustViewsLayoutTweetLoadFail
-{
-    
-    self.backgroundColor = [UIColor whiteColor];
-    
-    //message label
-    NSUInteger const messageHeight = 20;
-    NSUInteger const messageYOffset = 26;
-    UILabel *twitLoadErrorMessage = [[UILabel alloc] init];
-    CGRect messageFrame = CGRectMake(0, self.frame.size.height - messageHeight - messageYOffset, self.frame.size.width, messageHeight);
-    twitLoadErrorMessage.frame = messageFrame;
-    twitLoadErrorMessage.textAlignment = NSTextAlignmentCenter;
-    twitLoadErrorMessage.font = [UIFont fontWithName:@"Helvetica" size:15];
-    twitLoadErrorMessage.text = @"Das Element konnte nicht geladen werden.";
-    twitLoadErrorMessage.textColor = UIColorFromRGB(0x9a9a9a);
-    self.twitLoadErrorMessageLabel = twitLoadErrorMessage;
-    
-    //reload button
-    NSUInteger const buttonWidth = 32;
-    NSUInteger const buttonHeight = 32;
-    NSUInteger const halfParentViewWidth = self.frame.size.width/2;
-    NSUInteger const halfParentViewHeight = self.frame.size.height/2;
-    
-    //reload image
-    UIImage *reloadImg = [UIImage imageNamed:@"tweet_refresh_icon"];
-    
-    UIButton *button = [[UIButton alloc] init];
-    CGRect buttonFrame = CGRectMake((halfParentViewWidth-(buttonWidth/2)), (halfParentViewHeight-(buttonHeight/2)), buttonWidth, buttonHeight);
-    button.frame = buttonFrame;
-    
-    [button setImage:reloadImg forState:UIControlStateNormal];
-    [button setImage:reloadImg forState:UIControlStateSelected];
-    
-    [button addTarget:self action:@selector(reloadTwitterButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
-    self.twitReloadButton = button;
-    
-    [self addSubview:self.twitLoadErrorMessageLabel];
-    [self addSubview:self.twitReloadButton];
-    
-}
 
 
 #pragma mark - Tweeter properties apply
@@ -271,15 +227,6 @@ alpha:1.0]
     if (self.linkTextColorFlagChanged) {
         self.tweetView.linkTextColor = UIColorFromRGB([self.linkTextColor unsignedIntegerValue]);
     }
-    
-    // TODO remove support for now as it needs to recreate the view
-//    if(self.tweetStyleFlagChanged) {
-//        if([[self.tweetStyle lowercaseString] isEqualToString:@"twtrtweetviewstyleregular"]){
-//            self.tweetView.style = TWTRTweetViewStyleRegular;
-//        } else {
-//            self.tweetView.style = TWTRTweetViewStyleCompact;
-//        }
-//    }
     
     if (self.tweetThemeFlagChanged) {
         if([[self.tweetTheme lowercaseString] isEqualToString:@"twtrtweetviewthemelight"])
@@ -373,6 +320,7 @@ alpha:1.0]
 - (void)loadTweetWithID:(NSString*)tweetID
 {
     
+    NSLog(@"Loading tweet with ID %@", tweetID);
     activityIndicator.hidden = NO;
     [activityIndicator startAnimating];
     
@@ -384,15 +332,31 @@ alpha:1.0]
             [self applyViewProperties];
             [self adjustViewsLayout];
             activityIndicator.hidden = YES;
+            [self postSuccess];
         } else {
             NSLog(@"Failed to load tweet: %@", [error localizedDescription]);
             [activityIndicator stopAnimating];
             activityIndicator.hidden = YES;
             self.twitterDidFailWithError = YES;
+            self.tweetView.hidden = YES;
+            [self postError:[error localizedDescription]];
         }
     }];
 }
 
+- (void)postSuccess
+{
+    if (self.onLoadSuccess) {
+        self.onLoadSuccess(@{});
+    }
+}
+
+- (void)postError:(NSString *)error
+{
+    if (self.onLoadError) {
+        self.onLoadError(@{@"message": error});
+    }
+}
 
 #pragma mark - other
 //////////// OTHER ///////////////

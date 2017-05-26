@@ -18,6 +18,9 @@ RCT_REMAP_VIEW_PROPERTY(tweetStyle, TWEETSTYLE, NSString);
 RCT_REMAP_VIEW_PROPERTY(tweetTheme, TWEETTHEME, NSString);
 RCT_REMAP_VIEW_PROPERTY(backgroundColor, BACKGROUNDCOLOR, NSNumber);
 
+RCT_EXPORT_VIEW_PROPERTY(onLoadSuccess, RCTBubblingEventBlock)
+RCT_EXPORT_VIEW_PROPERTY(onLoadError, RCTBubblingEventBlock)
+
 @synthesize bridge = _bridge;
 
 - (UIView *)view
@@ -51,6 +54,15 @@ RCT_REMAP_VIEW_PROPERTY(backgroundColor, BACKGROUNDCOLOR, NSNumber);
     RCTUIManager *UIManager = [self.bridge uiManager];
     
     [UIManager setSize:newTweetViewSize forView:tweetView];
+}
+
+- (RCTViewManagerUIBlock)uiBlockToAmendWithShadowView:(RCTShadowView *)shadowView
+{
+    NSNumber *tag = shadowView.reactTag;
+    return ^(__unused RCTUIManager *uiManager, NSDictionary<NSNumber *, id> *viewRegistry) {
+        RNTwitterKitView *view = viewRegistry[tag];
+        [view respondToPropChanges];
+    };
 }
 
 - (TWTRAPIClient *)twitterAPIClient
