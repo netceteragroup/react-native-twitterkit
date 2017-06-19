@@ -70,8 +70,6 @@ export default class example extends Component {
         <Text style={styles.instructions}>
            Text Bellow Tweet
         </Text>
-        <Switch value={true} />
-
       </ScrollView>
     );
   }

@@ -22,9 +22,9 @@ import com.twitter.sdk.android.tweetui.TweetUtils;
 
 import java.util.ArrayList;
 
+//sammy // TODO: 14/06/2017
+//hide like button
 class TweetView extends RelativeLayout {
-
-
 
   public interface SizeChangeListener {
     void onSizeChanged(TweetView view, int width, int height);
@@ -71,6 +71,7 @@ class TweetView extends RelativeLayout {
     initializeTweetView();
 
     updateSize();
+    hideLikeButton();
   }
 
   public void respondToNewProps() {
