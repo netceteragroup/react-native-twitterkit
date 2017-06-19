@@ -22,8 +22,7 @@ import com.twitter.sdk.android.tweetui.TweetUtils;
 
 import java.util.ArrayList;
 
-//sammy // TODO: 14/06/2017
-//hide like button
+//19.06.2017 - like button is hidden
 class TweetView extends RelativeLayout {
 
   public interface SizeChangeListener {
