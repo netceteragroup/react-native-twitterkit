@@ -3,6 +3,7 @@ package com.netcetera.reactnative.twitterkit;
 
 import android.content.Context;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -15,10 +16,10 @@ import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.uimanager.ViewManager;
 import com.facebook.react.bridge.JavaScriptModule;
 
-import com.twitter.sdk.android.Twitter;
+import com.twitter.sdk.android.core.DefaultLogger;
+import com.twitter.sdk.android.core.Twitter;
 import com.twitter.sdk.android.core.TwitterAuthConfig;
-
-import io.fabric.sdk.android.Fabric;
+import com.twitter.sdk.android.core.TwitterConfig;
 
 public class ReactTwitterKitPackage implements ReactPackage {
 
@@ -53,17 +54,14 @@ public class ReactTwitterKitPackage implements ReactPackage {
       return;
     }
 
-    TwitterAuthConfig authConfig
-            = new TwitterAuthConfig(consumerKey, consumerSecret);
-
-    final Fabric fabric = new Fabric.Builder(reactContext)
-            .kits(new Twitter(authConfig))
+    TwitterConfig config = new TwitterConfig.Builder(reactContext)
+            .logger(new DefaultLogger(Log.DEBUG))
+            .twitterAuthConfig(new TwitterAuthConfig(consumerKey, consumerSecret))
+            .debug(true)
             .build();
 
-    Fabric.with(fabric);
+    Twitter.initialize(config);
   }
-
-
 
   @Override
   public List<NativeModule> createNativeModules(ReactApplicationContext reactContext) {

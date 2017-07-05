@@ -14,35 +14,35 @@ import java.util.List;
 
 public class MainApplication extends Application implements ReactApplication {
 
-  // set your keys here!
+    // set your keys here!
 
-  private static final String CONSUMER_KEY = null;
-  private static final String CONSUMER_SECRET = null;
+    private static final String CONSUMER_KEY = null;
+    private static final String CONSUMER_SECRET = null;
 
-  private final ReactNativeHost mReactNativeHost = new ReactNativeHost(this) {
+    private final ReactNativeHost mReactNativeHost = new ReactNativeHost(this) {
+        @Override
+        public boolean getUseDeveloperSupport() {
+            return BuildConfig.DEBUG;
+        }
+
+        @Override
+        protected List<ReactPackage> getPackages() {
+            return Arrays.<ReactPackage>asList(
+                    new MainReactPackage(),
+                    new ReactTwitterKitPackage(CONSUMER_KEY, CONSUMER_SECRET)
+            );
+        }
+    };
+
     @Override
-    public boolean getUseDeveloperSupport() {
-      return BuildConfig.DEBUG;
+    public ReactNativeHost getReactNativeHost() {
+        return mReactNativeHost;
     }
 
     @Override
-    protected List<ReactPackage> getPackages() {
-      return Arrays.<ReactPackage>asList(
-          new MainReactPackage(),
-          new ReactTwitterKitPackage(CONSUMER_KEY, CONSUMER_SECRET)
-      );
+    public void onCreate() {
+        super.onCreate();
+        SoLoader.init(this, /* native exopackage */ false);
     }
-  };
-
-  @Override
-  public ReactNativeHost getReactNativeHost() {
-    return mReactNativeHost;
-  }
-
-  @Override
-  public void onCreate() {
-    super.onCreate();
-    SoLoader.init(this, /* native exopackage */ false);
-  }
 
 }
