@@ -11,14 +11,13 @@
 
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTRootView.h>
-#import <Fabric/Fabric.h>
 #import <TwitterKit/TwitterKit.h>
 
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-  [Fabric with:@[[Twitter class]]];
+    [[Twitter sharedInstance] startWithConsumerKey:@"Y2ftp7LUu2sQUIbVcHQPYm90Y" consumerSecret:@"6EIe4uea63AWegbCTD2PShycCvkZ8kTw830oV1g23vSdvxyMap"];
   
   NSURL *jsCodeLocation;
 

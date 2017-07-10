@@ -1,5 +1,6 @@
 
 #import "RNTwitterkit.h"
+#import <TwitterKit/TwitterKit.h>
 
 @implementation RNTwitterkit
 
