@@ -58,6 +58,9 @@ alpha:1.0]
 
 //tweeter height after loading tweet
 @property (nonatomic) NSNumber *tweetHeight;
+
+
+
 @end
 
 
@@ -381,12 +384,33 @@ alpha:1.0]
 #pragma mark - TweeterViewDelegate
 
 - (void)tweetView:(TWTRTweetView *)tweetView didTapVideoWithURL:(NSURL *)videoURL {
+    
     UIWebView *webView = [[UIWebView alloc] initWithFrame:self.tweetView.frame];
     [self addSubview:webView];
-    webView.delegate = self;
+    //webView.delegate = self;
     [webView loadRequest:[NSURLRequest requestWithURL:videoURL]];
     
+    
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(videoStarted:) name:UIWindowDidBecomeVisibleNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(videoFinished:) name:UIWindowDidBecomeHiddenNotification object:nil];
 }
+
+
+- (void)videoStarted:(NSNotification *)notification {
+    NSLog(@"\nENTER fullscreen\n");
+    [[UIApplication sharedApplication] setStatusBarHidden:YES];
+}
+
+
+- (void)videoFinished:(NSNotification *)notification {
+    NSLog(@"\nEXIT fullscreen\n");
+    [[UIApplication sharedApplication] setStatusBarHidden:NO];
+    //restore orientation to portrait mode
+    [[UIDevice currentDevice] setValue:@(UIInterfaceOrientationPortrait) forKey:@"orientation"];
+}
+
+
 
 #pragma mark -
 

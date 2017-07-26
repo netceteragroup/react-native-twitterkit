@@ -11,7 +11,6 @@
 		0AA09E201F0BD7980072ADE6 /* TwitterKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AA09E1C1F0BD7980072ADE6 /* TwitterKit.framework */; };
 		0AD816E01F0CC2D700D33658 /* RNTwitterKitView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AD816DD1F0CC2D700D33658 /* RNTwitterKitView.m */; };
 		0AD816E11F0CC2D700D33658 /* TwitterViewManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AD816DF1F0CC2D700D33658 /* TwitterViewManager.m */; };
-		B3E7B58A1CC2AC0600A0062D /* RNTwitterkit.m in Sources */ = {isa = PBXBuildFile; fileRef = B3E7B5891CC2AC0600A0062D /* RNTwitterkit.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -36,8 +35,6 @@
 		0AD816DE1F0CC2D700D33658 /* TwitterViewManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TwitterViewManager.h; sourceTree = "<group>"; };
 		0AD816DF1F0CC2D700D33658 /* TwitterViewManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TwitterViewManager.m; sourceTree = "<group>"; };
 		134814201AA4EA6300B7C361 /* libRNTwitterkit.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libRNTwitterkit.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		B3E7B5881CC2AC0600A0062D /* RNTwitterkit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RNTwitterkit.h; sourceTree = "<group>"; };
-		B3E7B5891CC2AC0600A0062D /* RNTwitterkit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RNTwitterkit.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -68,8 +65,6 @@
 				0AA09E1C1F0BD7980072ADE6 /* TwitterKit.framework */,
 				0AA09E1D1F0BD7980072ADE6 /* TwitterKitResources.bundle */,
 				0AA09E1E1F0BD7980072ADE6 /* TwitterShareExtensionUIResources.bundle */,
-				B3E7B5881CC2AC0600A0062D /* RNTwitterkit.h */,
-				B3E7B5891CC2AC0600A0062D /* RNTwitterkit.m */,
 				0AD816DC1F0CC2D700D33658 /* RNTwitterKitView.h */,
 				0AD816DD1F0CC2D700D33658 /* RNTwitterKitView.m */,
 				0AD816DE1F0CC2D700D33658 /* TwitterViewManager.h */,
@@ -134,7 +129,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B3E7B58A1CC2AC0600A0062D /* RNTwitterkit.m in Sources */,
 				0AD816E01F0CC2D700D33658 /* RNTwitterKitView.m in Sources */,
 				0AD816E11F0CC2D700D33658 /* TwitterViewManager.m in Sources */,
 			);
