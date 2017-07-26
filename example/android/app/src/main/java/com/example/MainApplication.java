@@ -57,15 +57,15 @@ public class MainApplication extends Application implements ReactApplication, Ap
     //ActivityLifecycleCallbacks start
     @Override
     public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
-        if (activity instanceof PlayerActivity) {
-            android.util.Log.d(TAG,"event_activity_created");
-        }
+        //for the moment it is not needed to monitor
+        //if com.twitter.sdk.android.tweetui.PlayerActivity have been started
     }
 
     @Override
     public void onActivityDestroyed(Activity activity) {
         if (activity instanceof PlayerActivity) {
-            android.util.Log.d(TAG,"event_activity_destroyed");
+            //commented logs to ease adding code in main app
+            //LogUtils.d(TAG,"event_activity_destroyed");
             EventsHelper.sendTwitterVideoPlayerActivityDestroyedEvent(activity);
         }
     }
