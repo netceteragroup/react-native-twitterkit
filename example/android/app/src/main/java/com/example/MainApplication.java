@@ -53,6 +53,7 @@ public class MainApplication extends Application implements ReactApplication, Ap
     }
 
     //to be added in main project start
+    //add registerActivityLifecycleCallbacks in onCreate
     //ActivityLifecycleCallbacks start
     @Override
     public void onActivityCreated(Activity activity, Bundle savedInstanceState) {

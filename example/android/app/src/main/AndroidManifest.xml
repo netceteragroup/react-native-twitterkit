@@ -17,10 +17,6 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
 
-        <meta-data
-            android:name="io.fabric.ApiKey"
-            android:value="2483cd10d93bd3ac21ef94f70eda29aa6045a64e" />
-
         <activity
             android:name=".MainActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
