@@ -13,7 +13,7 @@ Pod::Spec.new do |s|
   s.homepage     = "https://github.com/netceteragroup/react-native-twitterkit"
   s.license      = "MIT"
   s.author       = "Netcetera"
-  s.platform     = :ios, "8.0"
+  s.platform     = :ios, "9.0"
   s.source       = { :git => "https://github.com/netceteragroup/react-native-twitterkit", :branch => "master" }
   s.source_files  = "ios/*.{h,m}"
   s.public_header_files = "ios/*.h"
