@@ -66,7 +66,7 @@ export default class example extends Component {
         </Text>
         <TweetView
           style={styles.empty_syle}
-          tweetid={'828627783119208449'} />
+          tweetid={'873299426923601921'} />
         <Text style={styles.instructions}>
            Text Bellow Tweet
         </Text>
