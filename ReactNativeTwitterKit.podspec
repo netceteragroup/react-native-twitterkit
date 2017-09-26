@@ -24,28 +24,31 @@ Pod::Spec.new do |s|
   s.dependency "Fabric"
   s.dependency "TwitterKit"
 
+  # For now, we are going with static libararies (default); the following
+  # stays commented out, in case we need it
+
   # Force the static framework to be linked into this pod
   # See https://github.com/CocoaPods/CocoaPods/issues/2926
 
-  s.frameworks =
-    'Fabric',
-    'TwitterCore',
-    'TwitterKit',
-    "Accounts",
-    "CoreData",
-    "CoreGraphics",
-    "Foundation",
-    "Security",
-    "Social",
-    "UIKit",
-    "CoreText",
-    "QuartzCore",
-    "CoreMedia",
-    "AVFoundation",
-    "SafariServices"
-
-  s.pod_target_xcconfig = {
-  	'FRAMEWORK_SEARCH_PATHS' => '$(inherited) "$(PODS_ROOT)/Fabric/iOS" "$(PODS_ROOT)/TwitterCore/iOS" "$(PODS_ROOT)/TwitterKit/iOS"'
-  }
+  # s.frameworks =
+  #   'Fabric',
+  #   'TwitterCore',
+  #   'TwitterKit',
+  #   "Accounts",
+  #   "CoreData",
+  #   "CoreGraphics",
+  #   "Foundation",
+  #   "Security",
+  #   "Social",
+  #   "UIKit",
+  #   "CoreText",
+  #   "QuartzCore",
+  #   "CoreMedia",
+  #   "AVFoundation",
+  #   "SafariServices"
+  #
+  # s.pod_target_xcconfig = {
+  # 	'FRAMEWORK_SEARCH_PATHS' => '$(inherited) "$(PODS_ROOT)/Fabric/iOS" "$(PODS_ROOT)/TwitterCore/iOS" "$(PODS_ROOT)/TwitterKit/iOS"'
+  # }
 
 end
