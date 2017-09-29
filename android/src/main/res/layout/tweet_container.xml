@@ -4,15 +4,6 @@
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:twittersdk="http://schemas.android.com/apk/res-auto">
 
-    <com.twitter.sdk.android.tweetui.CompactTweetView
-        android:id="@+id/tweet_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_centerInParent="true"
-        android:visibility="invisible"
-        twittersdk:tw__tweet_actions_enabled="true"
-        twittersdk:tw__tweet_id="846231685750439936"/>
-
     <RelativeLayout
         android:id="@+id/loading_container"
         android:layout_width="match_parent"
