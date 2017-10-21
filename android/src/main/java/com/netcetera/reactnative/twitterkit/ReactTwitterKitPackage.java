@@ -13,12 +13,10 @@ import com.facebook.react.ReactPackage;
 import com.facebook.react.bridge.NativeModule;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.uimanager.ViewManager;
-import com.facebook.react.bridge.JavaScriptModule;
 
-import com.twitter.sdk.android.Twitter;
 import com.twitter.sdk.android.core.TwitterAuthConfig;
-
-import io.fabric.sdk.android.Fabric;
+import com.twitter.sdk.android.core.Twitter;
+import com.twitter.sdk.android.core.TwitterConfig;
 
 public class ReactTwitterKitPackage implements ReactPackage {
 
@@ -56,14 +54,12 @@ public class ReactTwitterKitPackage implements ReactPackage {
     TwitterAuthConfig authConfig
             = new TwitterAuthConfig(consumerKey, consumerSecret);
 
-    final Fabric fabric = new Fabric.Builder(reactContext)
-            .kits(new Twitter(authConfig))
+    final TwitterConfig config = new TwitterConfig.Builder(reactContext)
+            .twitterAuthConfig(authConfig)
+            .debug(true)
             .build();
-
-    Fabric.with(fabric);
+    Twitter.initialize(config);;
   }
-
-
 
   @Override
   public List<NativeModule> createNativeModules(ReactApplicationContext reactContext) {
