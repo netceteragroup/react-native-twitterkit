@@ -33,7 +33,7 @@ class TweetView extends RelativeLayout {
 
   private View tweetMainContainer;
 
-  private CompactTweetView tweetView;
+  private CompactTweetView tweetView = null;
   private RelativeLayout loadingContainer;
   private int reactTag;
 
@@ -65,8 +65,14 @@ class TweetView extends RelativeLayout {
     if (tweet != null) {
       setTweetIdInternally(tweet.getId());
     }
-
-    tweetView.setTweet(tweet);
+    if(tweetView == null){
+      tweetView = new CompactTweetView(getContext(), tweet);
+      RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+      layoutParams.addRule(CENTER_IN_PARENT);
+      tweetView.setLayoutParams(layoutParams);
+      tweetView.setTweetActionsEnabled(true);
+      addView(tweetView);
+    }
     initializeTweetView();
 
     updateSize();
@@ -108,12 +114,14 @@ class TweetView extends RelativeLayout {
 
   private void measureTweet() {
 
-    int w = View.MeasureSpec.makeMeasureSpec(getWidth(), MeasureSpec.EXACTLY);
-    int h = View.MeasureSpec.makeMeasureSpec(ViewGroup.LayoutParams.WRAP_CONTENT, MeasureSpec.UNSPECIFIED);
+    if(tweetView != null) {
+      int w = View.MeasureSpec.makeMeasureSpec(getWidth(), MeasureSpec.EXACTLY);
+      int h = View.MeasureSpec.makeMeasureSpec(ViewGroup.LayoutParams.WRAP_CONTENT, MeasureSpec.UNSPECIFIED);
 
-    Log.d(TAG, "Measured " + tweetView.getMeasuredWidth() + ", " + tweetView.getMeasuredHeight());
+      Log.d(TAG, "Measured " + tweetView.getMeasuredWidth() + ", " + tweetView.getMeasuredHeight());
 
-    tweetView.measure(w, h);
+      tweetView.measure(w, h);
+    }
   }
 
   public void setTweetId(long tweetId) {
@@ -154,31 +162,38 @@ class TweetView extends RelativeLayout {
 
   private void hideLikeButton() {
     ToggleImageButton likeButton = (ToggleImageButton) findViewById(R.id.tw__tweet_like_button);
-    likeButton.setVisibility(View.GONE);
+    if(likeButton != null) {
+      likeButton.setVisibility(View.GONE);
+    }
   }
 
 
   private void findViews() {
     loadingContainer = (RelativeLayout) tweetMainContainer.findViewById(R.id.loading_container);
-    tweetView = (CompactTweetView) findViewById(R.id.tweet_view);
   }
 
   private void initializeTweetView() {
     loadingContainer.setVisibility(View.INVISIBLE);
-
-    tweetView.setVisibility(View.VISIBLE);
+    if(tweetView != null) {
+      tweetView.setVisibility(View.VISIBLE);
+      tweetView.requestLayout();
+    }
   }
 
 
   private void setLoadingView() {
     LogUtils.d(TAG, "setLoadingView");
-    tweetView.setVisibility(View.INVISIBLE);
+    if(tweetView != null) {
+      tweetView.setVisibility(View.INVISIBLE);
+    }
     loadingContainer.setVisibility(View.VISIBLE);
   }
 
   private void handleError() {
     LogUtils.d(TAG, "handleError");
-    tweetView.setVisibility(View.INVISIBLE);
+    if(tweetView != null) {
+      tweetView.setVisibility(View.INVISIBLE);
+    }
 
     WritableMap evt = Arguments.createMap();
     evt.putString("message", "Could not load tweet");

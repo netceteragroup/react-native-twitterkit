@@ -3,6 +3,7 @@ package com.netcetera.reactnative.twitterkit;
 
 import android.content.Context;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -14,8 +15,14 @@ import com.facebook.react.bridge.NativeModule;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.uimanager.ViewManager;
 
+<<<<<<< HEAD
 import com.twitter.sdk.android.core.TwitterAuthConfig;
 import com.twitter.sdk.android.core.Twitter;
+=======
+import com.twitter.sdk.android.core.DefaultLogger;
+import com.twitter.sdk.android.core.Twitter;
+import com.twitter.sdk.android.core.TwitterAuthConfig;
+>>>>>>> ee9f249c5d4eaf43fa2e3175a60af7427008a74b
 import com.twitter.sdk.android.core.TwitterConfig;
 
 public class ReactTwitterKitPackage implements ReactPackage {
@@ -51,6 +58,7 @@ public class ReactTwitterKitPackage implements ReactPackage {
       return;
     }
 
+<<<<<<< HEAD
     TwitterAuthConfig authConfig
             = new TwitterAuthConfig(consumerKey, consumerSecret);
 
@@ -59,6 +67,15 @@ public class ReactTwitterKitPackage implements ReactPackage {
             .debug(true)
             .build();
     Twitter.initialize(config);;
+=======
+    TwitterConfig config = new TwitterConfig.Builder(reactContext)
+            .logger(new DefaultLogger(Log.DEBUG))
+            .twitterAuthConfig(new TwitterAuthConfig(consumerKey, consumerSecret))
+            .debug(true)
+            .build();
+
+    Twitter.initialize(config);
+>>>>>>> ee9f249c5d4eaf43fa2e3175a60af7427008a74b
   }
 
   @Override
