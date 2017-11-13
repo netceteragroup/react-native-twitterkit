@@ -5,20 +5,18 @@ import android.content.Context;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
-
 import com.facebook.react.ReactPackage;
 import com.facebook.react.bridge.NativeModule;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.uimanager.ViewManager;
-
-import com.twitter.sdk.android.core.TwitterAuthConfig;
 import com.twitter.sdk.android.core.Twitter;
-import com.twitter.sdk.android.core.DefaultLogger;
+import com.twitter.sdk.android.core.TwitterAuthConfig;
 import com.twitter.sdk.android.core.TwitterConfig;
+import com.twitter.sdk.android.tweetui.TweetUi;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 public class ReactTwitterKitPackage implements ReactPackage {
 
@@ -60,7 +58,14 @@ public class ReactTwitterKitPackage implements ReactPackage {
             .twitterAuthConfig(authConfig)
             .debug(true)
             .build();
-    Twitter.initialize(config);;
+    Twitter.initialize(config);
+    new Thread(new Runnable() {
+      @Override
+      public void run() {
+        TweetUi.getInstance();
+        Log.i("ReactTwitterKit", "TweetUi instance initialized");
+      }
+    }).start();
   }
 
   @Override
