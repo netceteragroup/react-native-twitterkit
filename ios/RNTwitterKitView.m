@@ -236,7 +236,7 @@ alpha:1.0]
             self.tweetView.theme = TWTRTweetViewThemeDark;
         }
     }
-    
+
     if (self.backgroundColorFlagChanged) {
         self.tweetView.backgroundColor = UIColorFromRGB([self.tweetBackgroundColor unsignedIntegerValue]);
     }
@@ -289,7 +289,8 @@ alpha:1.0]
 ///////////////// TWEETER OBJECT //////////////////
 - (void)createTwitterView
 {
-    TWTRTweetView *tweetView = [[TWTRTweetView alloc] init];
+    TWTRTweetView *tweetView = [[TWTRTweetView alloc] initWithTweet:nil style:TWTRTweetViewStyleRegular];
+    //TWTRTweetView *tweetView = [[TWTRTweetView alloc] init];
     self.tweetView = tweetView;
     self.tweetView.translatesAutoresizingMaskIntoConstraints = NO;
     self.twitterDidLoadWithSuccess = NO;
