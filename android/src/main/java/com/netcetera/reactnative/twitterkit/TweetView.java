@@ -16,7 +16,6 @@ import com.twitter.sdk.android.core.Callback;
 import com.twitter.sdk.android.core.Result;
 import com.twitter.sdk.android.core.TwitterException;
 import com.twitter.sdk.android.core.models.Tweet;
-import com.twitter.sdk.android.tweetui.CompactTweetView;
 import com.twitter.sdk.android.tweetui.ToggleImageButton;
 import com.twitter.sdk.android.tweetui.TweetUtils;
 
@@ -33,7 +32,7 @@ class TweetView extends RelativeLayout {
 
   private View tweetMainContainer;
 
-  private CompactTweetView tweetView = null;
+  private com.twitter.sdk.android.tweetui.TweetView tweetView = null;
   private RelativeLayout loadingContainer;
   private int reactTag;
 
@@ -66,7 +65,7 @@ class TweetView extends RelativeLayout {
       setTweetIdInternally(tweet.getId());
     }
     if(tweetView == null){
-      tweetView = new CompactTweetView(getContext(), tweet);
+      tweetView = new com.twitter.sdk.android.tweetui.TweetView(getContext(), tweet);
       RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
       layoutParams.addRule(CENTER_IN_PARENT);
       tweetView.setLayoutParams(layoutParams);
