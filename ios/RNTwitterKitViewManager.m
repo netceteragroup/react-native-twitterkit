@@ -8,6 +8,12 @@
 
 @implementation RNTwitterKitViewManager
 
+// this module is supposed to run in the main queue
+- (dispatch_queue_t)methodQueue
+{
+    return dispatch_get_main_queue();
+}
+
 RCT_EXPORT_MODULE(TweetView);
 RCT_REMAP_VIEW_PROPERTY(tweetid, TWEETID, NSString);
 RCT_REMAP_VIEW_PROPERTY(showActionButtons, SHOWACTIONBUTTONS, BOOL);
@@ -21,18 +27,13 @@ RCT_REMAP_VIEW_PROPERTY(backgroundColor, BACKGROUNDCOLOR, NSNumber);
 RCT_EXPORT_VIEW_PROPERTY(onLoadSuccess, RCTBubblingEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onLoadError, RCTBubblingEventBlock)
 
-@synthesize bridge = _bridge;
-
 - (UIView *)view
 {
     RNTwitterKitView *view = [[RNTwitterKitView alloc] init];
     view.delegate = self;
     view.twitterAPIClient = [self twitterAPIClient];
-    
     return view;
 }
-
-
 
 - (RCTShadowView *)shadowView
 {
@@ -41,13 +42,11 @@ RCT_EXPORT_VIEW_PROPERTY(onLoadError, RCTBubblingEventBlock)
 
 - (void)tweetView:(RNTwitterKitView *)view requestsResize:(CGSize)newSize
 {
-    
     //getting the tweet view
     UIView *tweetView = view;
     
     //create a new size fot the tweet view
     CGSize newTweetViewSize = newSize;
-    
     
     NSLog(@"new tweet size: %f,%f", newTweetViewSize.width, newTweetViewSize.height);
     //getting the UI manager and set the intrinsic content size of the tweet view
