@@ -21,8 +21,6 @@ RCT_REMAP_VIEW_PROPERTY(backgroundColor, BACKGROUNDCOLOR, NSNumber);
 RCT_EXPORT_VIEW_PROPERTY(onLoadSuccess, RCTBubblingEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onLoadError, RCTBubblingEventBlock)
 
-@synthesize bridge = _bridge;
-
 - (UIView *)view
 {
     RNTwitterKitView *view = [[RNTwitterKitView alloc] init];
@@ -31,8 +29,6 @@ RCT_EXPORT_VIEW_PROPERTY(onLoadError, RCTBubblingEventBlock)
     
     return view;
 }
-
-
 
 - (RCTShadowView *)shadowView
 {
@@ -48,12 +44,23 @@ RCT_EXPORT_VIEW_PROPERTY(onLoadError, RCTBubblingEventBlock)
     //create a new size fot the tweet view
     CGSize newTweetViewSize = newSize;
     
-    
-    NSLog(@"new tweet size: %f,%f", newTweetViewSize.width, newTweetViewSize.height);
     //getting the UI manager and set the intrinsic content size of the tweet view
-    RCTUIManager *UIManager = [self.bridge uiManager];
-    
-    [UIManager setSize:newTweetViewSize forView:tweetView];
+    RCTUIManager *UIManager = [super.bridge uiManager];
+
+    if (view.reactTag) {
+        __block RCTShadowView *shadowView = nil;
+
+        dispatch_sync(RCTGetUIManagerQueue(), ^{
+            shadowView = [UIManager shadowViewForReactTag:view.reactTag];
+        });
+        UIView *reactView = [UIManager viewForReactTag:view.reactTag];
+
+        if (shadowView && reactView) {
+            [UIManager setSize:newTweetViewSize forView:tweetView];
+        }
+    } else {
+        RCTLogInfo(@"Tweet size can't be updated. View is no longer in tree.");
+    }
 }
 
 - (RCTViewManagerUIBlock)uiBlockToAmendWithShadowView:(RCTShadowView *)shadowView
