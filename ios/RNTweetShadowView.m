@@ -18,9 +18,11 @@
     static CGSize defaultSize;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        TWTRTweetView *view = [self tweetViewForMeasuring];
-        defaultSize = [view sizeThatFits:CGSizeMake(width, CGFLOAT_MAX)]; // 200 is the minimum width required for a tweet
-        defaultSize.width = UIViewNoIntrinsicMetric;
+        dispatch_sync(dispatch_get_main_queue(), ^{
+            TWTRTweetView *view = [self tweetViewForMeasuring];
+            defaultSize = [view sizeThatFits:CGSizeMake(width, CGFLOAT_MAX)]; // 200 is the minimum width required for a tweet
+            defaultSize.width = UIViewNoIntrinsicMetric;
+        });
     });
     
     return defaultSize;
