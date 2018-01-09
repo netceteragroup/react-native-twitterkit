@@ -22,7 +22,8 @@ Pod::Spec.new do |s|
 
   s.dependency "React"
   s.dependency "Fabric"
-  s.dependency "TwitterKit"
+  s.dependency "TwitterCore", "3.0.3"
+  s.dependency "TwitterKit", "3.2.2"
 
   # For now, we are going with static libararies (default); the following
   # stays commented out, in case we need it
