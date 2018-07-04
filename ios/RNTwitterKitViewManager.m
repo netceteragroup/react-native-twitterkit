@@ -1,5 +1,8 @@
 #import <React/RCTShadowView.h>
 #import <React/RCTUIManager.h>
+#if __has_include(<React/RCTUIManagerUtils.h>)
+#import <React/RCTUIManagerUtils.h>
+#endif
 #import <TwitterKit/TwitterKit.h>
 
 #import "RNTwitterKitViewManager.h"
