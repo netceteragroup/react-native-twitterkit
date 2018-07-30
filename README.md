@@ -3,7 +3,7 @@
 
 ## Getting started
 
-`$ npm install react-native-twitterkit --save`
+`$ npm install netceteragroup/react-native-twitterkit --save`
 
 ### Mostly automatic installation
 
