@@ -31,11 +31,11 @@ repositories {
 }
 
 dependencies {
-    compile 'com.facebook.react:react-native:+'
-    compile('com.twitter.sdk.android:twitter-core:3.1.1') {
+    implementation 'com.facebook.react:react-native:+'
+    implementation('com.twitter.sdk.android:twitter-core:3.1.1') {
         transitive = true
     }
-    compile('com.twitter.sdk.android:tweet-ui:3.1.1') {
+    implementation('com.twitter.sdk.android:tweet-ui:3.1.1') {
         transitive = true
     }
 }
