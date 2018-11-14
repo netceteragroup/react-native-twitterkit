@@ -1,11 +1,12 @@
 
 buildscript {
     repositories {
+        google()
         jcenter()
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.0'
+        classpath 'com.android.tools.build:gradle:3.1.4'
     }
 }
 
@@ -31,11 +32,11 @@ repositories {
 }
 
 dependencies {
-    compile 'com.facebook.react:react-native:+'
-    compile('com.twitter.sdk.android:twitter-core:3.1.1') {
+    implementation 'com.facebook.react:react-native:+'
+    implementation('com.twitter.sdk.android:twitter-core:3.1.1') {
         transitive = true
     }
-    compile('com.twitter.sdk.android:tweet-ui:3.1.1') {
+    implementation('com.twitter.sdk.android:tweet-ui:3.1.1') {
         transitive = true
     }
 }
