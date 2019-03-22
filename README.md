@@ -33,16 +33,8 @@
   	```
 3. Open up `android/app/src/main/java/[...]/MainApplication.java`
   - Add `import com.netcetera.reactnative.twitterkit.RNTwitterKitPackage;` to the imports at the top of the file
-  - Add `new RNTwitterKitPackage()` to the list returned by the `getPackages()` method
   - You will need Consumer key, and consumer secret, from an already registered app on Twitter
-  - In `android/app/src/main/java/[...]/MainApplication.java` in the `onCreate` method, you need to initialize the TwitterKit module by adding the following lines
-    ```java
-    TwitterAuthConfig authConfig = new TwitterAuthConfig(CONSUMER_KEY, CONSUMER_SECRET);
-    final Fabric fabricOpts = new Fabric.Builder(getApplicationContext())
-      .kits(new Twitter(authConfig) /* maybe some other frameworks from Twitter such as Crashlytics */)
-      .build();
-    Fabric.with(fabricOpts);
-    ```
+  - Add `new RNTwitterKitPackage(CONSUMER_KEY, CONSUMER_SECRET)` to the list returned by the `getPackages()` method
 
 ## Usage
 ```javascript
