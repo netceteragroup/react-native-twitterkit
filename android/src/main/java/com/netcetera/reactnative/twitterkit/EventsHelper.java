@@ -2,7 +2,7 @@ package com.netcetera.reactnative.twitterkit;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.v4.content.LocalBroadcastManager;
+import androidx.core.content.LocalBroadcastManager;
 
 public class EventsHelper {
 
