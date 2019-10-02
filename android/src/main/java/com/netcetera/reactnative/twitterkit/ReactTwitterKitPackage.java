@@ -2,7 +2,7 @@
 package com.netcetera.reactnative.twitterkit;
 
 import android.content.Context;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.util.Log;
 
 import com.facebook.react.ReactPackage;
