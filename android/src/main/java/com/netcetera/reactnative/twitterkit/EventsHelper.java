@@ -2,8 +2,7 @@ package com.netcetera.reactnative.twitterkit;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.v4.content.LocalBroadcastManager;
-
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 public class EventsHelper {
 
     public static final String TWITTER_VIDEO_PLAYER_ACTIVITY_DESTROYED = "twitter_video_player_activity_destroyed";
